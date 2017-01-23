@@ -1,0 +1,60 @@
+{
+  "name": "dot-wild",
+  "version": "0.0.1",
+  "description": "Use powerful dot notation (dot path + wildcard) to manipulate properties of JSON",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "babel -d lib/ src/",
+    "test": "npm run test:lint && npm run test:unit",
+    "test:lint": "eslint --no-ignore *.js .eslintrc.js",
+    "test:unit": "mocha --recursive --compilers js:babel-register",
+    "prepublish": "npm run build"
+  },
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tsuyoshiwada/dot-wild.git"
+  },
+  "keywords": [
+    "obj",
+    "object",
+    "arr",
+    "array",
+    "prop",
+    "property",
+    "dot",
+    "dot-notation",
+    "path",
+    "get",
+    "access",
+    "notation",
+    "dotty"
+  ],
+  "author": "tsuyoshiwada",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tsuyoshiwada/dot-wild/issues"
+  },
+  "homepage": "https://github.com/tsuyoshiwada/dot-wild#readme",
+  "devDependencies": {
+    "babel-cli": "^6.22.2",
+    "babel-eslint": "^7.1.1",
+    "babel-preset-latest": "^6.22.0",
+    "babel-preset-power-assert": "^1.0.0",
+    "babel-preset-stage-1": "^6.22.0",
+    "babel-register": "^6.22.0",
+    "eslint": "^3.13.1",
+    "eslint-plugin-babel": "^4.0.1",
+    "mocha": "^3.2.0",
+    "power-assert": "^1.4.2"
+  },
+  "dependencies": {
+    "is-obj": "^1.0.1"
+  },
+  "files": [
+    "lib",
+    "test"
+  ]
+}

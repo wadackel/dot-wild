@@ -1,0 +1,14 @@
+branches:
+  only:
+    - master
+notifications:
+  email: false
+language: node_js
+node_js:
+  - "6"
+  - "5"
+  - "4"
+sudo: false
+cache:
+  directories:
+    - node_modules
