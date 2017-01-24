@@ -382,4 +382,26 @@ describe("dot-wild", () => {
 
     assert.deepStrictEqual(dot.expand(dot.flatten(sampleData)), sampleData);
   });
+
+
+  it("matchPath()", () => {
+    assert(dot.matchPath("", "") === true);
+    assert(dot.matchPath("hoge", "hoge") === true);
+    assert(dot.matchPath("foo.bar", "foo.bar") === true);
+    assert(dot.matchPath("foo\\.bar", "foo\\.bar") === true);
+    assert(dot.matchPath("foo.*.nested", "foo.*.nested") === true);
+    assert(dot.matchPath("foo.*.nested", "foo.7.nested") === true);
+    assert(dot.matchPath("foo.7.nested", "foo.*.nested") === true);
+    assert(dot.matchPath("foo.7.nested.0.deep", "foo.*.nested.*.deep") === true);
+    assert(dot.matchPath("foo\\.bar.*.baz", "foo\\.bar.2.baz") === true);
+
+    assert(dot.matchPath(false, false) === false);
+    assert(dot.matchPath(true, true) === false);
+    assert(dot.matchPath(null, null) === false);
+    assert(dot.matchPath("fuga", "fugahoge") === false);
+    assert(dot.matchPath("foo.2", "foo.1") === false);
+    assert(dot.matchPath("foo.*.bar", "foo.bar") === false);
+    assert(dot.matchPath("foo.*.bar", "foo.*.bar.baz") === false);
+    assert(dot.matchPath("foo.*.bar", "foo\\.1.bar") === false);
+  });
 });

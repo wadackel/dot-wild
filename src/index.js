@@ -403,6 +403,26 @@ const _expand = data => {
 
 
 /**
+ * Match key
+ *
+ * @param  {string}  pathA
+ * @param  {string}  pathB
+ * @return {Object|Array}
+ */
+const _matchPath = (pathA, pathB) => {
+  if (!isString(pathA) || !isString(pathB)) return false;
+  if (pathA === pathB) return true;
+
+  const a = tokenize(pathA);
+  const b = tokenize(pathB);
+
+  return a.length !== b.length ? false : a.every((t, i) =>
+    matchToken(t, b[i]) || matchToken(b[i], t)
+  );
+};
+
+
+/**
  * Exports
  */
 module.exports = {
@@ -411,5 +431,6 @@ module.exports = {
   delete: _delete,
   has: _has,
   flatten: _flatten,
-  expand: _expand
+  expand: _expand,
+  matchPath: _matchPath
 };

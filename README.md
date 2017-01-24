@@ -128,6 +128,10 @@ const postData = {
   }
 };
 
+
+/**
+ * Flatten values
+ */
 dot.flatten(data);
 // => {
 //      text: "ok",
@@ -142,8 +146,20 @@ dot.flatten(data);
 //      "data.tags.1.name": "tag 2"
 //    }
 
+
+/**
+ * Expand values
+ */
 dot.expand({ "foo.bar": "baz" });
 // => { foo: { bar: "baz" } }
+
+
+/**
+ * Match path (helper method)
+ */
+dot.matchPath("foo.bar", "foo.bar");
+dot.matchPath("foo.*.bar.*.baz", "foo.5.bar.1.baz");
+// => true
 ```
 
 
@@ -157,6 +173,7 @@ All methods return a new object or array. (immutable)
 * `has(data, path): boolean`
 * `flatten(data): Object`
 * `expand(data): Object | Array`
+* `matchPath(pathA, pathB): boolean`
 
 
 #### data
