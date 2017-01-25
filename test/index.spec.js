@@ -54,10 +54,12 @@ describe("dot-wild", () => {
     assert(dot.get(t1, "['foo'].bar", "default") === "baz");
     assert(dot.get(t1, "['foo']['bar']", "default") === "baz");
 
+    assert(dot.get({ "foo.bar.baz": "hoge" }, "foo\\.bar\\.baz") === "hoge");
+
     const t2 = { "foo.bar": { baz: { fuga: "fuge" } } };
     assert.deepStrictEqual(dot.get(t2, "foo\\.bar"), { baz: { fuga: "fuge" } });
     assert.deepStrictEqual(dot.get(t2, "foo\\.bar.baz"), { fuga: "fuge" });
-    assert.deepStrictEqual(dot.get(t2, "foo\\.bar.baz.fuga"), "fuge");
+    assert(dot.get(t2, "foo\\.bar.baz.fuga") === "fuge");
     assert(dot.get(t2, "foo\\.bar.baz.fuga.fuge") == null);
 
     const t3 = [null, [{ nested: { deep: { fuga: "fuge" } } }], false];
@@ -202,18 +204,18 @@ describe("dot-wild", () => {
     assert.deepStrictEqual(dot.set(t2, "2", {
       id: 3, profile: { name: "foo" }
     }), [
-        { id: 1, profile: { name: "hoge" } },
-        { id: 2, profile: { name: "fuga" } },
-        { id: 3, profile: { name: "foo" } }
+      { id: 1, profile: { name: "hoge" } },
+      { id: 2, profile: { name: "fuga" } },
+      { id: 3, profile: { name: "foo" } }
     ]);
     assertT2();
 
     assert.deepStrictEqual(dot.set(t2, "2.profile", {
       name: "test", age: 50
     }), [
-        { id: 1, profile: { name: "hoge" } },
-        { id: 2, profile: { name: "fuga" } },
-        { profile: { name: "test", age: 50 } }
+      { id: 1, profile: { name: "hoge" } },
+      { id: 2, profile: { name: "fuga" } },
+      { profile: { name: "test", age: 50 } }
     ]);
     assertT2();
   });

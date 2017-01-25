@@ -70,18 +70,17 @@ const merge = (obj, source) => {
 
 const splitTokens = input => {
   const tokens = `${input}`.split(".");
-  const results = [];
-  let prev = null;
+  let results = [];
+  let store = [];
 
   tokens.forEach(token => {
     if (/^.*\\$/.test(token)) {
-      prev = token;
+      store.push(token.slice(0, token.length - 1));
+    } else if (store.length > 0) {
+      results = [...results, `${store.join(".")}.${token}`];
+      store = [];
     } else {
-      if (prev == null) {
-        return results.push(token);
-      }
-      results.push(`${prev.slice(0, prev.length - 1)}.${token}`);
-      prev = null;
+      results.push(token);
     }
   });
 
