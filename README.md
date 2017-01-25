@@ -12,6 +12,8 @@ dot-wild
 
 - [Install](#install)
 - [Usage](#usage)
+    - [Basic](#basic)
+    - [Advanced](#advanced)
 - [API](#api)
 - [Contribute](#contribute)
 - [License](#license)
@@ -160,6 +162,16 @@ dot.expand({ "foo.bar": "baz" });
 dot.matchPath("foo.bar", "foo.bar");
 dot.matchPath("foo.*.bar.*.baz", "foo.5.bar.1.baz");
 // => true
+
+
+/**
+ * Escape path string
+ */
+dot.escapePath("foo.bar");
+// => "foo\\.bar"
+
+dot.escapePath("foo\\.bar.baz");
+// => "foo\\.bar\\.baz"
 ```
 
 
@@ -174,6 +186,7 @@ All methods return a new object or array. (immutable)
 * `flatten(data): Object`
 * `expand(data): Object | Array`
 * `matchPath(pathA, pathB): boolean`
+* `escapePath(path): string`
 
 
 #### data

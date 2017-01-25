@@ -422,6 +422,19 @@ const _matchPath = (pathA, pathB) => {
 
 
 /**
+ * Escape path string
+ *
+ * @param  {string}  path
+ * @return {string}
+ */
+const _escapePath = path => (
+  !isString(path) ? "" : tokenize(path).map(p =>
+    p.split(".").join("\\.")
+  ).join("\\.")
+);
+
+
+/**
  * Exports
  */
 module.exports = {
@@ -431,5 +444,6 @@ module.exports = {
   has: _has,
   flatten: _flatten,
   expand: _expand,
-  matchPath: _matchPath
+  matchPath: _matchPath,
+  escapePath: _escapePath
 };

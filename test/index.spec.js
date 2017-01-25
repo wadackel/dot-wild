@@ -406,4 +406,18 @@ describe("dot-wild", () => {
     assert(dot.matchPath("foo.*.bar", "foo.*.bar.baz") === false);
     assert(dot.matchPath("foo.*.bar", "foo\\.1.bar") === false);
   });
+
+
+  it("escapePath()", () => {
+    assert(dot.escapePath(null) === "");
+    assert(dot.escapePath(undefined) === "");
+    assert(dot.escapePath("") === "");
+    assert(dot.escapePath("path") === "path");
+    assert(dot.escapePath("foo.bar") === "foo\\.bar");
+    assert(dot.escapePath("this.is.my.path") === "this\\.is\\.my\\.path");
+    assert(dot.escapePath("foo\\.bar") === "foo\\.bar");
+    assert(dot.escapePath("foo\\.bar.baz") === "foo\\.bar\\.baz");
+    assert(dot.escapePath("foo\\.bar\\.baz") === "foo\\.bar\\.baz");
+    assert(dot.escapePath("foo\\.*.*.bar\\.baz") === "foo\\.*\\.*\\.bar\\.baz");
+  });
 });
