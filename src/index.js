@@ -406,7 +406,7 @@ const _expand = data => {
  *
  * @param  {string}  pathA
  * @param  {string}  pathB
- * @return {Object|Array}
+ * @return {string}
  */
 const _matchPath = (pathA, pathB) => {
   if (!isString(pathA) || !isString(pathB)) return false;
