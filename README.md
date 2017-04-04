@@ -33,53 +33,53 @@ $ npm install dot-wild
 ### Basic
 
 ```javascript
-const dot = require("dot-wild");
+import * as dot from 'dot-wild';
 
 
 /**
  * Getter
  */
 
-dot.get({ foo: { bar: "baz" } }, "foo.bar");
-// => "baz"
+dot.get({ foo: { bar: 'baz' } }, 'foo.bar');
+// => 'baz'
 
-dot.get({ "foo.bar": "baz" }, "foo\\.bar");
-// => "baz"
+dot.get({ 'foo.bar': 'baz' }, 'foo\\.bar');
+// => 'baz'
 
-dot.get({ "foo.bar": "baz" }, "notfound", "default");
-// => "default"
+dot.get({ 'foo.bar': 'baz' }, 'notfound', 'default');
+// => 'default'
 
 const authorData = {
   authors: [
-    { username: "tsuyoshiwada", profile: { age: 24 } },
-    { username: "sampleuser", profile: { age: 30 } },
-    { username: "foobarbaz", profile: { age: 33 } }
+    { username: 'tsuyoshiwada', profile: { age: 24 } },
+    { username: 'sampleuser', profile: { age: 30 } },
+    { username: 'foobarbaz', profile: { age: 33 } }
   ]
 };
 
-dot.get(authorData, "authors.*.username");
-// => ["tsuyoshiwada", "sampleuser", "foobarbaz"]
+dot.get(authorData, 'authors.*.username');
+// => ['tsuyoshiwada', 'sampleuser', 'foobarbaz']
 
-dot.get(authorData, "authors.*.profile.age");
+dot.get(authorData, 'authors.*.profile.age');
 // => [24, 30, 33]
 
 
 /**
  * Setter
  */
-dot.set({ foo: { bar: "baz" } }, "foo.bar", "newvalue");
-// => { foo: { bar: "newvalue" } }
+dot.set({ foo: { bar: 'baz' } }, 'foo.bar', 'newvalue');
+// => { foo: { bar: 'newvalue' } }
 
-dot.set([{ foo: {} }], "0.foo.bar.baz", "value");
-// => [{ foo: { bar: { baz: "value" } } }]
+dot.set([{ foo: {} }], '0.foo.bar.baz', 'value');
+// => [{ foo: { bar: { baz: 'value' } } }]
 
 const members = [
-  { username: "tsuyoshiwada", profile: { age: 24 } },
-  { username: "sampleuser", profile: { age: 30 } },
-  { username: "foobarbaz", profile: { age: 33 } }
+  { username: 'tsuyoshiwada', profile: { age: 24 } },
+  { username: 'sampleuser', profile: { age: 30 } },
+  { username: 'foobarbaz', profile: { age: 33 } }
 ];
 
-dot.set(members, "*.id", 1);
+dot.set(members, '*.id', 1);
 // => [ { username: 'tsuyoshiwada', profile: { age: 24 }, id: 1 },
 //      { username: 'sampleuser', profile: { age: 30 }, id: 1 },
 //      { username: 'foobarbaz', profile: { age: 33 }, id: 1 } ]
@@ -88,10 +88,10 @@ dot.set(members, "*.id", 1);
 /**
  * Deleter
  */
-dot.delete({ foo: { bar: "baz" } }, "foo.bar");
+dot.remove({ foo: { bar: 'baz' } }, 'foo.bar');
 // => { foo: {} }
 
-dot.delete(members, "*.profile");
+dot.remove(members, '*.profile');
 // => [ { username: 'tsuyoshiwada' },
 //      { username: 'sampleuser' },
 //      { username: 'foobarbaz' } ]
@@ -100,12 +100,12 @@ dot.delete(members, "*.profile");
 /**
  * Has
  */
-dot.has({ foo: { bar: "baz" } }, "foo.bar");
-dot.has(members, "*.profile.age");
+dot.has({ foo: { bar: 'baz' } }, 'foo.bar');
+dot.has(members, '*.profile.age');
 // => true
 
-dot.has({ foo: { bar: "baz" } }, "foo\\.bar");
-dot.has(members, "*.notfound.key");
+dot.has({ foo: { bar: 'baz' } }, 'foo\\.bar');
+dot.has(members, '*.notfound.key');
 // => false
 ```
 
@@ -113,19 +113,19 @@ dot.has(members, "*.notfound.key");
 ### Advanced
 
 ```javascript
-const dot = require("dot-wild");
+import * as dot from 'dot-wild';
 
 const postData = {
-  text: "ok",
+  text: 'ok',
   code: 200,
   data: {
     posts: [
-      { id: 1, title: "post 1" },
-      { id: 2, title: "post 2" }
+      { id: 1, title: 'post 1' },
+      { id: 2, title: 'post 2' }
     ],
     tags: [
-      { id: 1, name: "tag 1" },
-      { id: 2, name: "tag 2" }
+      { id: 1, name: 'tag 1' },
+      { id: 2, name: 'tag 2' }
     ]
   }
 };
@@ -136,42 +136,42 @@ const postData = {
  */
 dot.flatten(data);
 // => {
-//      text: "ok",
+//      text: 'ok',
 //      code: 200,
-//      "data.posts.0.id": 1,
-//      "data.posts.0.title": "post 1",
-//      "data.posts.1.id": 2,
-//      "data.posts.1.title": "post 2",
-//      "data.tags.0.id": 1,
-//      "data.tags.0.name": "tag 1",
-//      "data.tags.1.id": 2,
-//      "data.tags.1.name": "tag 2"
+//      'data.posts.0.id': 1,
+//      'data.posts.0.title': 'post 1',
+//      'data.posts.1.id': 2,
+//      'data.posts.1.title': 'post 2',
+//      'data.tags.0.id': 1,
+//      'data.tags.0.name': 'tag 1',
+//      'data.tags.1.id': 2,
+//      'data.tags.1.name': 'tag 2'
 //    }
 
 
 /**
  * Expand values
  */
-dot.expand({ "foo.bar": "baz" });
-// => { foo: { bar: "baz" } }
+dot.expand({ 'foo.bar': 'baz' });
+// => { foo: { bar: 'baz' } }
 
 
 /**
  * Match path (helper method)
  */
-dot.matchPath("foo.bar", "foo.bar");
-dot.matchPath("foo.*.bar.*.baz", "foo.5.bar.1.baz");
+dot.matchPath('foo.bar', 'foo.bar');
+dot.matchPath('foo.*.bar.*.baz', 'foo.5.bar.1.baz');
 // => true
 
 
 /**
  * Escape path string
  */
-dot.escapePath("foo.bar");
-// => "foo\\.bar"
+dot.escapePath('foo.bar');
+// => 'foo\\.bar'
 
-dot.escapePath("foo\\.bar.baz");
-// => "foo\\.bar\\.baz"
+dot.escapePath('foo\\.bar.baz');
+// => 'foo\\.bar\\.baz'
 ```
 
 
@@ -179,19 +179,19 @@ dot.escapePath("foo\\.bar.baz");
 
 All methods return a new object or array. (immutable)
 
-* `get(data, path, [value]): Object | Array`
-* `set(data, path, value): Object | Array`
-* `delete(data, path): Object | Array`
+* `get(data, path, [value]): Object | any[]`
+* `set(data, path, value): Object | any[]`
+* `remove(data, path): Object | any[]`
 * `has(data, path): boolean`
 * `flatten(data): Object`
-* `expand(data): Object | Array`
+* `expand(data): Object | any[]`
 * `matchPath(pathA, pathB): boolean`
 * `escapePath(path): string`
 
 
 #### data
 
-**type: `Object | Array`**
+**type: `Object | any[]`**
 
 Original object or array. Destructive operation is not performed.
 
@@ -218,10 +218,12 @@ Value to set at path or optional default value to return from get.
 ## Contribute
 
 1. Fork it!
-2. Create your feature branch: git checkout -b my-new-feature
-3. Commit your changes: git commit -am 'Add some feature'
-4. Push to the branch: git push origin my-new-feature
-5. Submit a pull request :D
+1. Create your feature branch: git checkout -b my-new-feature
+1. Commit your changes: git commit -am 'Add some feature'
+1. Push to the branch: git push origin my-new-feature
+1. Submit a pull request :D
+
+Bugs, feature requests and comments are more than welcome in the [issues](https://github.com/tsuyoshiwada/dot-wild/issues).
 
 
 
