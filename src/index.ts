@@ -119,11 +119,6 @@ const tokenize = (str: string): Tokens => {
 
 /**
  * Getter
- *
- * @param  {(Object|any[])}  data
- * @param  {string}          path
- * @param  {*}               [value]
- * @return {*}
  */
 export const get = (data: any, path: DotKey, value: any | null = null): any => {
   if (!path || !isString(path)) {
@@ -166,11 +161,6 @@ export const get = (data: any, path: DotKey, value: any | null = null): any => {
 
 /**
  * Setter
- *
- * @param  {(Object|any[])}  data
- * @param  {string}          path
- * @param  {*}               [value]
- * @return {(Object|any[])}
  */
 export const set = (data: any, path: DotKey, value: any): any => {
   if (!path || !isString(path)) return data;
@@ -224,10 +214,6 @@ export const set = (data: any, path: DotKey, value: any): any => {
 
 /**
  * Deleter
- *
- * @param  {(Object|any[])}  data
- * @param  {string}          path
- * @return {(Object|any[])}
  */
 export const remove = (data: any, path: DotKey): any => {
   if (!path || !isString(path)) return data;
@@ -299,10 +285,6 @@ export const remove = (data: any, path: DotKey): any => {
 
 /**
  * Check value
- *
- * @param  {(Object|any[])}  data
- * @param  {string}          path
- * @return {boolean}
  */
 export const has = (data: any, path: DotKey): boolean => {
   if (!path || !isString(path)) return false;
@@ -337,6 +319,9 @@ export const has = (data: any, path: DotKey): boolean => {
 };
 
 
+/**
+ * Flatten values
+ */
 export const internalFlatten = (data: any, currentPath: DotKey | null = null): any => {
   let results = {};
 
@@ -366,20 +351,11 @@ export const internalFlatten = (data: any, currentPath: DotKey | null = null): a
 };
 
 
-/**
- * Flatten values
- *
- * @param  {(Object|any[])}  data
- * @return {Object}
- */
 export const flatten = (data: any): any => internalFlatten(data);
 
 
 /**
  * Expand vaules
- *
- * @param  {(Object|any[])}  data
- * @return {Object|any[]}
  */
 export const expand = (data: any): any => {
   let results = {};
@@ -444,10 +420,6 @@ export const map = (data: any, path: DotKey, iteratee: (value: any, key: DotKey,
 
 /**
  * Match key
- *
- * @param  {string}  pathA
- * @param  {string}  pathB
- * @return {boolean}
  */
 export const matchPath = (pathA: string, pathB: string): boolean => {
   if (!isString(pathA) || !isString(pathB)) return false;
@@ -464,9 +436,6 @@ export const matchPath = (pathA: string, pathB: string): boolean => {
 
 /**
  * Escape path string
- *
- * @param  {string}  path
- * @return {string}
  */
 export const escapePath = (path: string): string => (
   !isString(path) ? '' : tokenize(path).map(p =>
