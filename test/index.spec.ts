@@ -371,6 +371,62 @@ describe('dot-wild', () => {
   });
 
 
+  it('forEach()', () => {
+    let cnt = 0;
+    let result: { values: any[]; keys: any[] } = {
+      values: [],
+      keys: [],
+    };
+
+    // Normal path
+    dot.forEach(sampleData, 'nested', (value: any, key: string, data: any) => {
+      cnt += 1;
+      result.values.push(value);
+      result.keys.push(key);
+      assert.deepStrictEqual(sampleData.nested, data);
+    });
+
+    assert(cnt === 1);
+    assert.deepStrictEqual(result.values[0], sampleData.nested.deep);
+
+    // Use wildcard
+    cnt = 0;
+    result.values = [];
+    result.keys = [];
+
+    dot.forEach(sampleData, '*', (value: any, key: number) => {
+      cnt += 1;
+      result.values.push(value);
+      result.keys.push(key);
+      assert(key === cnt - 1);
+    });
+
+    assert(cnt === 2);
+    assert.deepStrictEqual(result.values[0], sampleData.tags);
+    assert.deepStrictEqual(result.values[1], sampleData.nested);
+  });
+
+
+  it('map()', () => {
+    let result: any[] = [];
+
+    // Normal path
+    result = dot.map(sampleData, 'tags', (value: any, key: any, array: any) => {
+      assert.deepStrictEqual(sampleData.tags, array);
+      return value.id + key;
+    });
+
+    assert.deepStrictEqual(result, [1, 3]);
+
+    // Use wildcard
+    result = dot.map(sampleData, 'nested.deep.*.members.*.profile.age', (value: any, key: any) => {
+      return value + key;
+    });
+
+    assert.deepStrictEqual(result, [24, 31, 35, 22, 37, 45]);
+  });
+
+
   it('matchPath()', () => {
     assert(dot.matchPath('', '') === true);
     assert(dot.matchPath('hoge', 'hoge') === true);
