@@ -134,7 +134,7 @@ const postData = {
 /**
  * Flatten values
  */
-dot.flatten(data);
+dot.flatten(postData);
 // => {
 //      text: 'ok',
 //      code: 200,
@@ -154,6 +154,20 @@ dot.flatten(data);
  */
 dot.expand({ 'foo.bar': 'baz' });
 // => { foo: { bar: 'baz' } }
+
+
+/**
+ * Collection helpers (forEach, map)
+ */
+dot.forEach(postData, 'data.posts.*.id', (value, key) => {
+  // value => 1, 2
+  // key   => 0, 1
+});
+
+dot.map(postData, 'data.tags.*.name', (value, key) => {
+  return `${key}.${value}`;
+});
+// => ['0.tag 1', '1.tag 2']
 
 
 /**
@@ -177,6 +191,8 @@ dot.escapePath('foo\\.bar.baz');
 
 ## API
 
+See [API Documetation](https://tsuyoshiwada.github.io/dot-wild/).
+
 All methods return a new object or array. (immutable)
 
 * `get(data, path, [value]): Object | any[]`
@@ -185,6 +201,8 @@ All methods return a new object or array. (immutable)
 * `has(data, path): boolean`
 * `flatten(data): Object`
 * `expand(data): Object | any[]`
+* `forEach(data, path, iteratee): void`
+* `map(data, path, iteratee): any[]`
 * `matchPath(pathA, pathB): boolean`
 * `escapePath(path): string`
 
