@@ -322,7 +322,7 @@ export const has = (data: any, path: DotKey): boolean => {
 /**
  * Flatten values
  */
-export const internalFlatten = (data: any, currentPath: DotKey | null = null): any => {
+const internalFlatten = (data: any, currentPath: DotKey | null = null): any => {
   let results = {};
 
   if (isEmpty(data)) return results;
