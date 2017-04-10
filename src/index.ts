@@ -424,6 +424,25 @@ export const forEach = (data: any, path: DotKey, iteratee: (value: any, key: Dot
 
 
 /**
+ * Create a new element
+ * with the results of calling a provided function on every element.
+ */
+export const map = (data: any, path: DotKey, iteratee: (value: any, key: DotKey, array: any | any[]) => any): any[] => {
+  const result = get(data, path);
+  if (result === null) return [];
+
+  const obj = toIterable(result);
+  const values: any[] = [];
+
+  each(obj, (value, key, array) => {
+    values[key] = iteratee(value, key, array);
+  });
+
+  return values;
+};
+
+
+/**
  * Match key
  *
  * @param  {string}  pathA

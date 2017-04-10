@@ -407,6 +407,26 @@ describe('dot-wild', () => {
   });
 
 
+  it('map()', () => {
+    let result: any[] = [];
+
+    // Normal path
+    result = dot.map(sampleData, 'tags', (value: any, key: any, array: any) => {
+      assert.deepStrictEqual(sampleData.tags, array);
+      return value.id + key;
+    });
+
+    assert.deepStrictEqual(result, [1, 3]);
+
+    // Use wildcard
+    result = dot.map(sampleData, 'nested.deep.*.members.*.profile.age', (value: any, key: any) => {
+      return value + key;
+    });
+
+    assert.deepStrictEqual(result, [24, 31, 35, 22, 37, 45]);
+  });
+
+
   it('matchPath()', () => {
     assert(dot.matchPath('', '') === true);
     assert(dot.matchPath('hoge', 'hoge') === true);
