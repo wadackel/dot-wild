@@ -1,3 +1,17 @@
+## v1.1.0 (2017-04-10)
+
+### New features
+
+* `forEach()`
+* `map()`
+* API Documentation by [typedoc](https://github.com/TypeStrong/typedoc).
+
+
+### Bugfix
+
+* Clean unnecessary export
+
+
 ## v1.0.0 (2017-04-04)
 
 ### New features
