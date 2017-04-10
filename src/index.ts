@@ -31,17 +31,17 @@ const regex = {
 };
 
 
-const each = (obj: any | null, iteratee: (v: any, i: DotKey) => boolean | void): void => {
+const each = (obj: any | null, iteratee: (v: any, i: DotKey, a: any) => boolean | void): void => {
   if (!obj) return;
 
   if (isArray(obj)) {
     for (let i = 0; i < obj.length; i++) {
-      if (iteratee(obj[i], i) === false) break;
+      if (iteratee(obj[i], i, obj) === false) break;
     }
   } else if (isObj(obj)) {
     const keys = objKeys(obj);
     for (let i = 0; i < keys.length; i++) {
-      if (iteratee(obj[keys[i]], keys[i]) === false) break;
+      if (iteratee(obj[keys[i]], keys[i], obj) === false) break;
     }
   }
 };
@@ -405,6 +405,21 @@ export const expand = (data: any): any => {
   });
 
   return results;
+};
+
+
+/**
+ * Executes a provided function once for each element.
+ */
+const toIterable = (value: any) => !isObj(value) && !isArray(value) ? [value] : value;
+
+export const forEach = (data: any, path: DotKey, iteratee: (value: any, key: DotKey, array: any | any[]) => void): void => {
+  const result = get(data, path);
+  if (result === null) return;
+
+  const obj = toIterable(result);
+
+  each(obj, iteratee);
 };
 
 
