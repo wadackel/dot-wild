@@ -159,15 +159,17 @@ dot.expand({ 'foo.bar': 'baz' });
 /**
  * Collection helpers (forEach, map)
  */
-dot.forEach(postData, 'data.posts.*.id', (value, key) => {
+dot.forEach(postData, 'data.posts.*.id', (value, key, path, data) => {
   // value => 1, 2
-  // key   => 0, 1
+  // key   => 'id', 'id
+  // path  => 'data.posts.0.id', 'data.posts.1.id'
+  // data  => postData...
 });
 
-dot.map(postData, 'data.tags.*.name', (value, key) => {
-  return `${key}.${value}`;
+dot.map(postData, 'data.tags.*.name', (value, key, path, data) => {
+  return `${dot.get(data, path)} === ${value} (${key})`;
 });
-// => ['0.tag 1', '1.tag 2']
+// => ['tag 1 === tag 1 (name)', 'tag 2 === tag 2 (name)']
 
 
 /**

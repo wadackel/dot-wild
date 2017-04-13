@@ -1,3 +1,10 @@
+## v1.1.1 (2017-04-14)
+
+### Minor changes
+
+* Change collection helper callback arguments [#2](https://github.com/tsuyoshiwada/dot-wild/issues/2)
+
+
 ## v1.1.0 (2017-04-10)
 
 ### New features

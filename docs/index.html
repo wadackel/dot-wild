@@ -207,15 +207,17 @@ dot.expand({ <span class="hljs-string">'foo.bar'</span>: <span class="hljs-strin
 <span class="hljs-comment">/**
  * Collection helpers (forEach, map)
  */</span>
-dot.forEach(postData, <span class="hljs-string">'data.posts.*.id'</span>, (value, key) =&gt; {
+dot.forEach(postData, <span class="hljs-string">'data.posts.*.id'</span>, (value, key, path, data) =&gt; {
   <span class="hljs-comment">// value =&gt; 1, 2</span>
-  <span class="hljs-comment">// key   =&gt; 0, 1</span>
+  <span class="hljs-comment">// key   =&gt; 'id', 'id</span>
+  <span class="hljs-comment">// path  =&gt; 'data.posts.0.id', 'data.posts.1.id'</span>
+  <span class="hljs-comment">// data  =&gt; postData...</span>
 });
 
-dot.map(postData, <span class="hljs-string">'data.tags.*.name'</span>, (value, key) =&gt; {
-  <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">${key}</span>.<span class="hljs-subst">${value}</span>`</span>;
+dot.map(postData, <span class="hljs-string">'data.tags.*.name'</span>, (value, key, path, data) =&gt; {
+  <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">${dot.get(data, path)}</span> === <span class="hljs-subst">${value}</span> (<span class="hljs-subst">${key}</span>)`</span>;
 });
-<span class="hljs-comment">// =&gt; ['0.tag 1', '1.tag 2']</span>
+<span class="hljs-comment">// =&gt; ['tag 1 === tag 1 (name)', 'tag 2 === tag 2 (name)']</span>
 
 
 <span class="hljs-comment">/**
