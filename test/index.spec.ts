@@ -372,58 +372,102 @@ describe('dot-wild', () => {
 
 
   it('forEach()', () => {
-    let cnt = 0;
-    let result: { values: any[]; keys: any[] } = {
-      values: [],
-      keys: [],
-    };
+    let results: any[] = [];
+
+    // Not found
+    dot.forEach(sampleData, 'hoge.fuga', () => {
+      throw new Error('error');
+    });
 
     // Normal path
-    dot.forEach(sampleData, 'nested', (value: any, key: string, data: any) => {
-      cnt += 1;
-      result.values.push(value);
-      result.keys.push(key);
-      assert.deepStrictEqual(sampleData.nested, data);
+    dot.forEach(sampleData, 'nested', (value: any, key: any, path: string, data: any) => {
+      assert(dot.get(data, path) === value);
+      results.push([value, key, path]);
     });
 
-    assert(cnt === 1);
-    assert.deepStrictEqual(result.values[0], sampleData.nested.deep);
+    assert(results.length === 1);
+    assert.deepStrictEqual(results[0][0], sampleData.nested);
+    assert(results[0][1] === 'nested');
+    assert(results[0][2] === 'nested');
 
     // Use wildcard
-    cnt = 0;
-    result.values = [];
-    result.keys = [];
+    results = [];
 
-    dot.forEach(sampleData, '*', (value: any, key: number) => {
-      cnt += 1;
-      result.values.push(value);
-      result.keys.push(key);
-      assert(key === cnt - 1);
+    dot.forEach(sampleData, 'tags.*.*', (value: any, key: any, path: string, data: any) => {
+      assert.deepStrictEqual(dot.get(data, path), value);
+      results.push([value, key, path]);
     });
 
-    assert(cnt === 2);
-    assert.deepStrictEqual(result.values[0], sampleData.tags);
-    assert.deepStrictEqual(result.values[1], sampleData.nested);
+    assert(results.length === 4);
+
+    assert(results[0][0] === 1);
+    assert(results[0][1] === 'id');
+    assert(results[0][2] === 'tags.0.id');
+
+    assert(results[1][0] === 'tag1');
+    assert(results[1][1] === 'tag');
+    assert(results[1][2] === 'tags.0.tag');
+
+    assert(results[2][0] === 2);
+    assert(results[2][1] === 'id');
+    assert(results[2][2] === 'tags.1.id');
+
+    assert(results[3][0] === 'tag2');
+    assert(results[3][1] === 'tag');
+    assert(results[3][2] === 'tags.1.tag');
   });
 
 
   it('map()', () => {
-    let result: any[] = [];
+    let results: any[] = [];
+
+    // Not found
+    results = dot.map(sampleData, 'foo.bar', () => {
+      throw new Error('error');
+    });
 
     // Normal path
-    result = dot.map(sampleData, 'tags', (value: any, key: any, array: any) => {
-      assert.deepStrictEqual(sampleData.tags, array);
-      return value.id + key;
+    results = dot.map(sampleData, 'tags', (value: any, key: any, path: string, data: any) => {
+      assert.deepStrictEqual(dot.get(data, path), value);
+      return [value, key, path];
     });
 
-    assert.deepStrictEqual(result, [1, 3]);
+    assert(results.length === 1);
+    assert.deepStrictEqual(results[0][0], sampleData.tags);
+    assert(results[0][1] === 'tags');
+    assert(results[0][2] === 'tags');
 
     // Use wildcard
-    result = dot.map(sampleData, 'nested.deep.*.members.*.profile.age', (value: any, key: any) => {
-      return value + key;
+    results = dot.map(sampleData, 'nested.deep.*.members.*.profile.age', (value: any, key: any, path: string, data: any) => {
+      assert.deepStrictEqual(dot.get(data, path), value);
+      return [value, key, path];
     });
 
-    assert.deepStrictEqual(result, [24, 31, 35, 22, 37, 45]);
+    assert(results.length === 6);
+
+    assert(results[0][0] === 24);
+    assert(results[0][1] === 'age');
+    assert(results[0][2] === 'nested.deep.0.members.0.profile.age');
+
+    assert(results[1][0] === 30);
+    assert(results[1][1] === 'age');
+    assert(results[1][2] === 'nested.deep.0.members.1.profile.age');
+
+    assert(results[2][0] === 33);
+    assert(results[2][1] === 'age');
+    assert(results[2][2] === 'nested.deep.0.members.2.profile.age');
+
+    assert(results[3][0] === 19);
+    assert(results[3][1] === 'age');
+    assert(results[3][2] === 'nested.deep.1.members.0.profile.age');
+
+    assert(results[4][0] === 33);
+    assert(results[4][1] === 'age');
+    assert(results[4][2] === 'nested.deep.1.members.1.profile.age');
+
+    assert(results[5][0] === 40);
+    assert(results[5][1] === 'age');
+    assert(results[5][2] === 'nested.deep.1.members.2.profile.age');
   });
 
 
