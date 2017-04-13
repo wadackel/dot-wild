@@ -1,6 +1,8 @@
 type DotKey = string | number;
+type DotKeys = DotKey[];
 type Token = string;
 type Tokens = Token[];
+
 
 /**
  * Utilities
@@ -120,42 +122,76 @@ const tokenize = (str: string): Tokens => {
 /**
  * Getter
  */
-export const get = (data: any, path: DotKey, value: any | null = null): any => {
+interface DataWithKeys {
+  exist: boolean;
+  wildcard: boolean;
+  values: [any, DotKeys][];
+}
+
+const internalGet = (data: any, path: DotKey, value: any | null): DataWithKeys => {
   if (!path || !isString(path)) {
-    return value;
+    return {
+      exist: false,
+      wildcard: false,
+      values: [[value, []]],
+    };
   }
 
   const key = '__get_item__';
   const tokens = tokenize(path);
   const length = tokens.length;
-  let useWildcard = false;
-  let index = 0;
-  let context = { [key]: [data] };
+  const state: {
+    index: number;
+    context: { [index: string]: [any, DotKeys][] };
+    wildcard: boolean;
+  } = {
+    index: 0,
+    context: { [key]: [[data, []]] },
+    wildcard: false,
+  };
 
   tokens.forEach(token => {
     const next: any[] = [];
 
-    each(context[key], item => {
+    each(state.context[key], ([item, p]) => {
       each(item, (v, k) => {
-        if (matchToken(k, token)) {
-          if (token === '*') {
-            useWildcard = true;
-          }
-          next.push(v);
+        if (!matchToken(k, token)) return;
+
+        if (token === '*') {
+          state.wildcard = true;
         }
+
+        next.push([v, [...p, k]]);
       });
     });
 
     if (next.length > 0) {
-      context = { [key]: next };
-      index++;
+      state.context = { [key]: next };
+      state.index++;
     }
   });
 
-  if (index !== length) return value;
+  if (state.index !== length) {
+    return {
+      exist: false,
+      wildcard: state.wildcard,
+      values: [[value, []]],
+    };
+  }
 
-  const v = context[key];
-  return useWildcard ? v : v.shift();
+  return {
+    exist: true,
+    wildcard: state.wildcard,
+    values: state.context[key],
+  };
+};
+
+export const get = (data: any, path: DotKey, value: any | null = null): any => {
+  const { exist, wildcard, values } = internalGet(data, path, value);
+
+  if (!exist) return values[0][0];
+  if (wildcard) return values.map(v => v[0]);
+  return values[0][0];
 };
 
 
@@ -387,15 +423,11 @@ export const expand = (data: any): any => {
 /**
  * Executes a provided function once for each element.
  */
-const toIterable = (value: any) => !isObj(value) && !isArray(value) ? [value] : value;
+export const forEach = (data: any, path: DotKey, iteratee: (value: any, key: DotKey, path: string, data: any | any[]) => boolean | void): void => {
+  const { exist, values } = internalGet(data, path, null);
+  if (!exist) return;
 
-export const forEach = (data: any, path: DotKey, iteratee: (value: any, key: DotKey, array: any | any[]) => void): void => {
-  const result = get(data, path);
-  if (result === null) return;
-
-  const obj = toIterable(result);
-
-  each(obj, iteratee);
+  each(values, ([v, p]) => iteratee(v, p[p.length - 1], p.join('.'), data));
 };
 
 
@@ -403,18 +435,11 @@ export const forEach = (data: any, path: DotKey, iteratee: (value: any, key: Dot
  * Create a new element
  * with the results of calling a provided function on every element.
  */
-export const map = (data: any, path: DotKey, iteratee: (value: any, key: DotKey, array: any | any[]) => any): any[] => {
-  const result = get(data, path);
-  if (result === null) return [];
+export const map = (data: any, path: DotKey, iteratee: (value: any, key: DotKey, path: string, data: any | any[]) => any): any[] => {
+  const { exist, values } = internalGet(data, path, null);
+  if (!exist) return [];
 
-  const obj = toIterable(result);
-  const values: any[] = [];
-
-  each(obj, (value, key, array) => {
-    values[key] = iteratee(value, key, array);
-  });
-
-  return values;
+  return values.map(([v, p]) => iteratee(v, p[p.length - 1], p.join('.'), data));
 };
 
 
