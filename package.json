@@ -10,7 +10,7 @@
     "test": "npm run test:lint && npm run test:unit",
     "test:lint": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'",
     "test:unit": "mocha --compilers ts:ts-node/register,tsx:ts-node/register 'test/**/*.spec.ts'",
-    "docs": "typedoc --excludeNotExported --excludePrivate --out docs/ src/",
+    "docs": "typedoc --excludeNotExported --excludePrivate --out docs/ src/ && touch docs/.nojekyll",
     "prepublish": "npm run build"
   },
   "engines": {
