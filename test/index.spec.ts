@@ -380,7 +380,8 @@ describe('dot-wild', () => {
     });
 
     // Normal path
-    dot.forEach(sampleData, 'nested', (value: any, key: any, path: string, data: any) => {
+    dot.forEach(sampleData, 'nested', (value: any, key: any, context: any, path: string, data: any) => {
+      assert(context[key] === value);
       assert(dot.get(data, path) === value);
       results.push([value, key, path]);
     });
@@ -393,7 +394,8 @@ describe('dot-wild', () => {
     // Use wildcard
     results = [];
 
-    dot.forEach(sampleData, 'tags.*.*', (value: any, key: any, path: string, data: any) => {
+    dot.forEach(sampleData, 'tags.*.*', (value: any, key: any, context: any, path: string, data: any) => {
+      assert(context[key] === value);
       assert.deepStrictEqual(dot.get(data, path), value);
       results.push([value, key, path]);
     });
@@ -427,7 +429,8 @@ describe('dot-wild', () => {
     });
 
     // Normal path
-    results = dot.map(sampleData, 'tags', (value: any, key: any, path: string, data: any) => {
+    results = dot.map(sampleData, 'tags', (value: any, key: any, context: any, path: string, data: any) => {
+      assert(context[key] === value);
       assert.deepStrictEqual(dot.get(data, path), value);
       return [value, key, path];
     });
@@ -438,7 +441,8 @@ describe('dot-wild', () => {
     assert(results[0][2] === 'tags');
 
     // Use wildcard
-    results = dot.map(sampleData, 'nested.deep.*.members.*.profile.age', (value: any, key: any, path: string, data: any) => {
+    results = dot.map(sampleData, 'nested.deep.*.members.*.profile.age', (value: any, key: any, context: any, path: string, data: any) => {
+      assert(context[key] === value);
       assert.deepStrictEqual(dot.get(data, path), value);
       return [value, key, path];
     });
