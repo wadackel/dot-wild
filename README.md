@@ -159,14 +159,15 @@ dot.expand({ 'foo.bar': 'baz' });
 /**
  * Collection helpers (forEach, map)
  */
-dot.forEach(postData, 'data.posts.*.id', (value, key, path, data) => {
-  // value => 1, 2
-  // key   => 'id', 'id
-  // path  => 'data.posts.0.id', 'data.posts.1.id'
-  // data  => postData...
+dot.forEach(postData, 'data.posts.*.id', (value, key, context, path, data) => {
+  // value   => 1, 2
+  // key     => 'id', 'id'
+  // context => { id: 1, title: 'post 1' }, { id: 2, title: 'post 2' }
+  // path    => 'data.posts.0.id', 'data.posts.1.id'
+  // data    => postData...
 });
 
-dot.map(postData, 'data.tags.*.name', (value, key, path, data) => {
+dot.map(postData, 'data.tags.*.name', (value, key, context, path, data) => {
   return `${dot.get(data, path)} === ${value} (${key})`;
 });
 // => ['tag 1 === tag 1 (name)', 'tag 2 === tag 2 (name)']

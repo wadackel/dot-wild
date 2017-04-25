@@ -1,3 +1,11 @@
+## v2.0.0 (2017-04-25)
+
+## Breaking changes
+
+* Rechange collection helper callback arguments [#2](https://github.com/tsuyoshiwada/dot-wild/issues/2)  
+  => `(value: any, key: DotKey, context: any, path: string, data: any | any[])`
+
+
 ## v1.1.1 (2017-04-14)
 
 ### Minor changes
