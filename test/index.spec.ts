@@ -29,6 +29,22 @@ const sampleData = {
 
 
 describe('dot-wild', () => {
+  it('tokenize()', () => {
+    assert.deepStrictEqual(dot.tokenize(''), []);
+    assert.deepStrictEqual(dot.tokenize('foo'), ['foo']);
+    assert.deepStrictEqual(dot.tokenize('foo.bar'), ['foo', 'bar']);
+    assert.deepStrictEqual(dot.tokenize('foo.bar.baz'), ['foo', 'bar', 'baz']);
+    assert.deepStrictEqual(dot.tokenize('foo\\.bar.baz'), ['foo.bar', 'baz']);
+    assert.deepStrictEqual(dot.tokenize('foo\\.bar\\.baz'), ['foo.bar.baz']);
+    assert.deepStrictEqual(dot.tokenize('foo.*.*.bar'), ['foo', '*', '*', 'bar']);
+    assert.deepStrictEqual(dot.tokenize('foo*.*.bar'), ['foo*', '*', 'bar']);
+    assert.deepStrictEqual(dot.tokenize('foo**bar'), ['foo**bar']);
+    assert.deepStrictEqual(dot.tokenize('hoge.1.fuga'), ['hoge', '1', 'fuga']);
+    assert.deepStrictEqual(dot.tokenize('hoge[1].fuga'), ['hoge', '1', 'fuga']);
+    assert.deepStrictEqual(dot.tokenize('hoge[1].*.fuga'), ['hoge', '1', '*', 'fuga']);
+  });
+
+
   it('get()', () => {
     const t1 = { foo: { bar: 'baz' } };
     assert(dot.get(t1, '') == null);

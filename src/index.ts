@@ -106,7 +106,10 @@ const hasToken = (path: string): boolean => (
 );
 
 
-const tokenize = (str: string): Tokens => {
+/**
+ * Tokenize path string
+ */
+export const tokenize = (str: string): Tokens => {
   const results: Tokens = [];
 
   splitTokens(str).forEach(token => {
