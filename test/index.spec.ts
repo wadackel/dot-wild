@@ -520,4 +520,15 @@ describe('dot-wild', () => {
     assert(dot.escapePath('foo\\.bar\\.baz') === 'foo\\.bar\\.baz');
     assert(dot.escapePath('foo\\.*.*.bar\\.baz') === 'foo\\.*\\.*\\.bar\\.baz');
   });
+
+
+  it('containWildcardToken()', () => {
+    assert(dot.containWildcardToken('foo.*.bar'));
+    assert(dot.containWildcardToken('*.foo'));
+    assert(dot.containWildcardToken('0.1.foo.bar.*'));
+    assert(dot.containWildcardToken('foo') === false);
+    assert(dot.containWildcardToken('foo*bar') === false);
+    assert(dot.containWildcardToken('foo.*bar') === false);
+    assert(dot.containWildcardToken('dot\\.path\\.*') === false);
+  });
 });

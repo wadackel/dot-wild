@@ -470,3 +470,11 @@ export const escapePath = (path: string): string => (
     p.split('.').join('\\.'),
   ).join('\\.')
 );
+
+
+/**
+ * Check contains of wildcard syntax
+ */
+export const containWildcardToken = (path: string): boolean => (
+  !isString(path) ? false : tokenize(path).some(p => p === '*')
+);
