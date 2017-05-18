@@ -81,7 +81,11 @@
 					<li><a href="#license">License</a></li>
 				</ul>
 				<h2 id="install">Install</h2>
-				<pre><code class="lang-bash">$ npm install dot-wild
+				<pre><code class="lang-bash">$ npm install dot-wild --save
+
+<span class="hljs-comment"># or</span>
+
+$ yarn add dot-wild
 </code></pre>
 				<h2 id="usage">Usage</h2>
 				<h3 id="basic">Basic</h3>
@@ -222,6 +226,16 @@ dot.map(postData, <span class="hljs-string">'data.tags.*.name'</span>, (value, k
 
 
 <span class="hljs-comment">/**
+ * String to Tokens
+ */</span>
+dot.tokenize(<span class="hljs-string">'foo.bar.baz'</span>);
+<span class="hljs-comment">// =&gt; ['foo', 'bar', 'baz']</span>
+
+dot.tokenize(<span class="hljs-string">'foo[1].2.*.bar\\.*.baz'</span>);
+<span class="hljs-comment">// =&gt; [ 'foo', '1', '2', '*', 'bar.*', 'baz' ]</span>
+
+
+<span class="hljs-comment">/**
  * Match path (helper method)
  */</span>
 dot.matchPath(<span class="hljs-string">'foo.bar'</span>, <span class="hljs-string">'foo.bar'</span>);
@@ -237,6 +251,18 @@ dot.escapePath(<span class="hljs-string">'foo.bar'</span>);
 
 dot.escapePath(<span class="hljs-string">'foo\\.bar.baz'</span>);
 <span class="hljs-comment">// =&gt; 'foo\\.bar\\.baz'</span>
+
+
+<span class="hljs-comment">/**
+ * Check contains wildcard token
+ */</span>
+dot.containWildcardToken(<span class="hljs-string">'foo.*.bar'</span>);
+dot.containWildcardToken(<span class="hljs-string">'*.foo.1'</span>);
+<span class="hljs-comment">// =&gt; true</span>
+
+dot.containWildcardToken(<span class="hljs-string">'path.string'</span>);
+dot.containWildcardToken(<span class="hljs-string">'foo*bar'</span>);
+<span class="hljs-comment">// =&gt; false</span>
 </code></pre>
 				<h2 id="api">API</h2>
 				<p>See <a href="https://tsuyoshiwada.github.io/dot-wild/">API Documetation</a>.</p>

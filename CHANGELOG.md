@@ -1,3 +1,10 @@
+## v2.1.0 (2017-05-18)
+
+* Add helper methods
+    - `tokenize()`
+    - `containWildcardToken()`
+
+
 ## v2.0.0 (2017-04-25)
 
 ## Breaking changes

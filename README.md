@@ -23,7 +23,11 @@ dot-wild
 ## Install
 
 ```bash
-$ npm install dot-wild
+$ npm install dot-wild --save
+
+# or
+
+$ yarn add dot-wild
 ```
 
 
@@ -174,6 +178,16 @@ dot.map(postData, 'data.tags.*.name', (value, key, context, path, data) => {
 
 
 /**
+ * String to Tokens
+ */
+dot.tokenize('foo.bar.baz');
+// => ['foo', 'bar', 'baz']
+
+dot.tokenize('foo[1].2.*.bar\\.*.baz');
+// => [ 'foo', '1', '2', '*', 'bar.*', 'baz' ]
+
+
+/**
  * Match path (helper method)
  */
 dot.matchPath('foo.bar', 'foo.bar');
@@ -189,6 +203,18 @@ dot.escapePath('foo.bar');
 
 dot.escapePath('foo\\.bar.baz');
 // => 'foo\\.bar\\.baz'
+
+
+/**
+ * Check contains wildcard token
+ */
+dot.containWildcardToken('foo.*.bar');
+dot.containWildcardToken('*.foo.1');
+// => true
+
+dot.containWildcardToken('path.string');
+dot.containWildcardToken('foo*bar');
+// => false
 ```
 
 
