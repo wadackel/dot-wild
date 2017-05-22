@@ -254,6 +254,16 @@ dot.escapePath(<span class="hljs-string">'foo\\.bar.baz'</span>);
 
 
 <span class="hljs-comment">/**
+ * Build path from Tokens like array
+ */</span>
+dot.buildPath([<span class="hljs-string">'foo'</span>, <span class="hljs-string">'bar'</span>, <span class="hljs-string">'baz'</span>]);
+<span class="hljs-comment">// =&gt; 'foo.bar.baz'</span>
+
+dot.buildPath([<span class="hljs-number">1</span>, <span class="hljs-string">'[2]'</span>, <span class="hljs-number">3</span>, <span class="hljs-string">'["foo"]'</span>, <span class="hljs-string">'bar.baz'</span>]);
+<span class="hljs-comment">// =&gt; '1.2.3.foo.bar\\.baz'</span>
+
+
+<span class="hljs-comment">/**
  * Check contains wildcard token
  */</span>
 dot.containWildcardToken(<span class="hljs-string">'foo.*.bar'</span>);
@@ -276,8 +286,11 @@ dot.containWildcardToken(<span class="hljs-string">'foo*bar'</span>);
 					<li><code>expand(data): Object | any[]</code></li>
 					<li><code>forEach(data, path, iteratee): void</code></li>
 					<li><code>map(data, path, iteratee): any[]</code></li>
+					<li><code>tokenize(path): string[]</code></li>
 					<li><code>matchPath(pathA, pathB): boolean</code></li>
 					<li><code>escapePath(path): string</code></li>
+					<li><code>buildPath(tokens)[]): string</code></li>
+					<li><code>containWilcardToken(path): boolean</code></li>
 				</ul>
 				<h4 id="data">data</h4>
 				<p><strong>type: <code>Object | any[]</code></strong></p>
@@ -289,6 +302,9 @@ dot.containWildcardToken(<span class="hljs-string">'foo*bar'</span>);
 				<h4 id="value">value</h4>
 				<p><strong>type: <code>any</code></strong></p>
 				<p>Value to set at path or optional default value to return from get.</p>
+				<h4 id="tokens">tokens</h4>
+				<p><strong>type: <code>(string | number)[]</code></strong></p>
+				<p>An array of tokens that make up the path.</p>
 				<h2 id="contribute">Contribute</h2>
 				<ol>
 					<li>Fork it!</li>

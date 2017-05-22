@@ -473,8 +473,16 @@ export const escapePath = (path: string): string => (
 
 
 /**
+ * Build path from Tokens like array
+ */
+export const buildPath = (tokens: (string | number)[]): string => (
+  tokens.map(token => escapePath(`${token}`)).join('.')
+);
+
+
+/**
  * Check contains of wildcard syntax
  */
 export const containWildcardToken = (path: string): boolean => (
-  !isString(path) ? false : tokenize(path).some(p => p === '*')
+  !isString(path) ? false : tokenize(path).indexOf('*') > -1
 );
