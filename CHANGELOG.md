@@ -1,3 +1,9 @@
+## v2.2.0 (2017-05-23)
+
+* Add helper methods
+    - `buildPath()`
+
+
 ## v2.1.0 (2017-05-18)
 
 * Add helper methods

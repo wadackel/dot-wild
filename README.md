@@ -1,5 +1,4 @@
-dot-wild
-========
+# dot-wild
 
 [![Build Status](http://img.shields.io/travis/tsuyoshiwada/dot-wild.svg?style=flat-square)](https://travis-ci.org/tsuyoshiwada/dot-wild)
 [![npm version](https://img.shields.io/npm/v/dot-wild.svg?style=flat-square)](http://badge.fury.io/js/dot-wild)
@@ -206,6 +205,16 @@ dot.escapePath('foo\\.bar.baz');
 
 
 /**
+ * Build path from Tokens like array
+ */
+dot.buildPath(['foo', 'bar', 'baz']);
+// => 'foo.bar.baz'
+
+dot.buildPath([1, '[2]', 3, '["foo"]', 'bar.baz']);
+// => '1.2.3.foo.bar\\.baz'
+
+
+/**
  * Check contains wildcard token
  */
 dot.containWildcardToken('foo.*.bar');
@@ -232,8 +241,11 @@ All methods return a new object or array. (immutable)
 * `expand(data): Object | any[]`
 * `forEach(data, path, iteratee): void`
 * `map(data, path, iteratee): any[]`
+* `tokenize(path): string[]`
 * `matchPath(pathA, pathB): boolean`
 * `escapePath(path): string`
+* `buildPath(tokens)[]): string`
+* `containWilcardToken(path): boolean`
 
 
 #### data
@@ -260,6 +272,13 @@ And, you can match arrays by using `*` (wildcard).
 Value to set at path or optional default value to return from get.
 
 
+#### tokens
+
+**type: `(string | number)[]`**
+
+An array of tokens that make up the path.
+
+
 
 
 ## Contribute
@@ -277,3 +296,4 @@ Bugs, feature requests and comments are more than welcome in the [issues](https:
 ## License
 
 [MIT © tsuyoshiwada](./LICENSE)
+
