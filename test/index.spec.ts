@@ -522,6 +522,19 @@ describe('dot-wild', () => {
   });
 
 
+  it('buildPath()', () => {
+    assert(dot.buildPath([]) === '');
+    assert(dot.buildPath(['foo']) === 'foo');
+    assert(dot.buildPath(['foo', 'bar', 'baz']) === 'foo.bar.baz');
+    assert(dot.buildPath(['foo.bar', 'baz']) === 'foo\\.bar.baz');
+    assert(dot.buildPath(['foo.bar.baz']) === 'foo\\.bar\\.baz');
+    assert(dot.buildPath([1, 2, 3]) === '1.2.3');
+    assert(dot.buildPath(['[1]', '[20]', '[300]']) === '1.20.300');
+    assert(dot.buildPath(['foo', '[\'bar\']', '["baz"]']) === 'foo.bar.baz');
+    assert(dot.buildPath(['foo', 1, 2, '[1]', '*', '["bar"]', 'baz.*']) === 'foo.1.2.1.*.bar.baz\\.*');
+  });
+
+
   it('containWildcardToken()', () => {
     assert(dot.containWildcardToken('foo.*.bar'));
     assert(dot.containWildcardToken('*.foo'));
