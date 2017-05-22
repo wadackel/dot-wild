@@ -476,5 +476,5 @@ export const escapePath = (path: string): string => (
  * Check contains of wildcard syntax
  */
 export const containWildcardToken = (path: string): boolean => (
-  !isString(path) ? false : tokenize(path).some(p => p === '*')
+  !isString(path) ? false : tokenize(path).indexOf('*') > -1
 );
