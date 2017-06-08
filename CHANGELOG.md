@@ -1,3 +1,8 @@
+## v2.2.1 (2017-06-09)
+
+* Fix a bug that remove() method left empty element of array
+
+
 ## v2.2.0 (2017-05-23)
 
 * Add helper methods
