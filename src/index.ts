@@ -254,69 +254,78 @@ export const set = (data: any, path: DotKey, value: any): any => {
 /**
  * Deleter
  */
+const arrayRemove = (array: any[], index: number): any[] => (
+  array.slice(0, index).concat(array.slice(index + 1))
+);
+
+const simpleRemove = (data: any, path: DotKey): any => {
+  if (isArray(data) && isArrayKey(path)) {
+    data = arrayRemove(data, parseInt(<string>path, 10));
+  } else {
+    delete data[path];
+  }
+
+  return data;
+};
+
 export const remove = (data: any, path: DotKey): any => {
-  if (!path || !isString(path)) return data;
+  if (!path || !isString(path)) {
+    return data;
+  }
 
   let _data = clone(data);
 
   if (!hasToken(path) && path !== '*') {
-    if (isArrayKey(path) && isArray(_data)) {
-      _data.splice(parseInt(path, 10), 1);
-    } else {
-      delete _data[path];
-    }
-    return _data;
+    return simpleRemove(_data, path);
   }
 
   const tokens = tokenize(path);
 
   if (tokens.indexOf('*') < 0) {
-    const res = _data;
+    const result = _data;
 
     each(tokens, (token, i): boolean => {
       if (i === tokens.length - 1) {
-        delete _data[token];
+        _data = simpleRemove(_data, token);
         return false;
+
+      } else {
+        _data = _data[token];
+        return isObj(_data) || isArray(_data);
       }
-
-      _data = _data[token];
-
-      if (!isObj(_data) && !isArray(_data)) {
-        return false;
-      }
-
-      return true;
     });
 
-    return res;
+    return result;
+  }
 
-  } else {
-    const token = tokens.shift();
-    const nextPath = tokens.join('.');
+  const first = tokens.shift();
+  const later = tokens.join('.');
+  const isDataArray = isArray(_data);
+  let count = 0;
 
-    if (token === undefined) return _data;
+  if (first === undefined) {
+    return _data;
+  }
 
-    each(_data, (v, k) => {
-      if (!matchToken(k, token)) return;
+  each(_data, (v, k) => {
+    if (!matchToken(k, first)) {
+      return;
+    }
 
-      if (isObj(v) || isArray(v)) {
-        if (nextPath) {
-          _data[k] = remove(v, nextPath);
-
+    if ((!isObj(v) && !isArray(v)) || !later) {
+      if (!later) {
+        if (isDataArray) {
+          _data = arrayRemove(_data, parseInt(<string>k, 10) - count);
+          count += isDataArray ? 1 : 0;
         } else {
-          if (isArray(_data[k])) {
-            _data[k].splice(parseInt(<string>k), 1);
-            return;
-          }
-
           delete _data[k];
         }
-
-      } else if (!nextPath) {
-        delete _data[k];
       }
-    });
-  }
+      return;
+    }
+
+    _data[k] = remove(v, later);
+  });
 
   return _data;
 };

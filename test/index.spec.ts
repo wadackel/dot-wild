@@ -242,6 +242,8 @@ describe('dot-wild', () => {
 
     assert.deepStrictEqual(dot.remove({ 'foo.bar': 'baz' }, 'foo\\.bar'), {});
 
+    let result: any = null;
+
     const t2 = [
       { nest: [{ deep: { name: 'foo' } }] },
       { nest: [{ deep: { name: 'bar' } }] },
@@ -255,49 +257,79 @@ describe('dot-wild', () => {
       ]);
     };
 
-    assert.deepStrictEqual(dot.remove(t2, '0'), [
+    result = dot.remove(t2, '*');
+    assert.deepStrictEqual(result, []);
+    assert(result.length === 0);
+    assertT2();
+
+    result = dot.remove(t2, '0');
+    assert.deepStrictEqual(result, [
       { nest: [{ deep: { name: 'bar' } }] },
       { nest: [{ deep: { name: 'baz' } }] },
     ]);
+    assert(result.length === 2);
     assertT2();
 
-    assert.deepStrictEqual(dot.remove(t2, '0.nest'), [
+    result = dot.remove(t2, '0.nest');
+    assert.deepStrictEqual(result, [
       {},
       { nest: [{ deep: { name: 'bar' } }] },
       { nest: [{ deep: { name: 'baz' } }] },
     ]);
+    assert(result.length === 3);
     assertT2();
 
-    assert.deepStrictEqual(dot.remove(t2, '2.nest.0.deep.name'), [
+    result = dot.remove(t2, '2.nest.0.deep.name');
+    assert.deepStrictEqual(result, [
       { nest: [{ deep: { name: 'foo' } }] },
       { nest: [{ deep: { name: 'bar' } }] },
       { nest: [{ deep: {} }] },
     ]);
+    assert(result.length === 3);
     assertT2();
 
-    assert.deepStrictEqual(dot.remove(t2, '*'), []);
+    result = dot.remove(t2, '*');
+    assert.deepStrictEqual(result, []);
+    assert(result.length === 0);
     assertT2();
 
-    assert.deepStrictEqual(dot.remove(t2, '*.nest.*.deep'), [
+    result = dot.remove(t2, '*.nest.*.deep');
+    assert.deepStrictEqual(result, [
       { nest: [{}] },
       { nest: [{}] },
       { nest: [{}] },
     ]);
     assertT2();
 
-    assert.deepStrictEqual(dot.remove(t2, '*.nest.*.deep.name'), [
+    result = dot.remove(t2, '*.nest.*.deep.name');
+    assert.deepStrictEqual(result, [
       { nest: [{ deep: {} }] },
       { nest: [{ deep: {} }] },
       { nest: [{ deep: {} }] },
     ]);
+    assert(result.length === 3);
     assertT2();
 
-    assert.deepStrictEqual(dot.remove(t2, '*.nest.*.deep.name.hoge'), [
+    result = dot.remove(t2, '*.nest.*.deep.name.hoge');
+    assert.deepStrictEqual(result, [
       { nest: [{ deep: { name: 'foo' } }] },
       { nest: [{ deep: { name: 'bar' } }] },
       { nest: [{ deep: { name: 'baz' } }] },
     ]);
+    assert(result.length === 3);
     assertT2();
+
+    const values = [
+      1,
+      2,
+      3,
+      4,
+      5,
+    ];
+
+    result = dot.remove(values, '*');
+    assert.deepStrictEqual(result, []);
+    assert(result.length === 0);
   });
 
 
