@@ -286,7 +286,11 @@ export const remove = (data: any, path: DotKey): any => {
 
     each(tokens, (token, i): boolean => {
       if (i === tokens.length - 1) {
-        _data = simpleRemove(_data, token);
+        if (isArray(_data)) {
+          _data.splice(parseInt(<string>token, 10), 1);
+        } else {
+          delete _data[token];
+        }
         return false;
 
       } else {

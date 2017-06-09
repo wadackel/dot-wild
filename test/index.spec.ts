@@ -225,7 +225,7 @@ describe('dot-wild', () => {
   });
 
 
-  it('remove()', () => {
+  it.only('remove()', () => {
     const t1 = { foo: { bar: 'baz' } };
     const assertT1 = () => {
       assert.deepStrictEqual(t1, { foo: { bar: 'baz' } });
@@ -319,7 +319,7 @@ describe('dot-wild', () => {
     assert(result.length === 3);
     assertT2();
 
-    const values = [
+    let values: any = [
       1,
       2,
       3,
@@ -330,6 +330,81 @@ describe('dot-wild', () => {
     result = dot.remove(values, '*');
     assert.deepStrictEqual(result, []);
     assert(result.length === 0);
+
+    values = [
+      { nest: [1, 2, 3] },
+      { nest: [1, 2, 3] },
+      { nest: [1, 2, 3] },
+    ];
+
+    result = dot.remove(values, '0.nest.0');
+    assert.deepStrictEqual(result, [
+      { nest: [2, 3] },
+      { nest: [1, 2, 3] },
+      { nest: [1, 2, 3] },
+    ]);
+    assert(result[0].nest.length === 2);
+
+    values = [
+      [
+        [1, 2, 3],
+        [1, 2, 3],
+        [1, 2, 3],
+      ],
+      [
+        [1, 2, 3],
+        [1, 2, 3],
+        [1, 2, 3],
+      ],
+    ];
+
+    result = dot.remove(values, '*.0');
+    assert.deepStrictEqual(result, [
+      [
+        [1, 2, 3],
+        [1, 2, 3],
+      ],
+      [
+        [1, 2, 3],
+        [1, 2, 3],
+      ],
+    ]);
+    assert(result[0].length === 2);
+    assert(result[1].length === 2);
+
+    result = dot.remove(values, '*.*.2');
+    assert.deepStrictEqual(result, [
+      [
+        [1, 2],
+        [1, 2],
+        [1, 2],
+      ],
+      [
+        [1, 2],
+        [1, 2],
+        [1, 2],
+      ],
+    ]);
+    assert(result[0][0].length === 2);
+    assert(result[0][1].length === 2);
+    assert(result[0][2].length === 2);
+    assert(result[1][0].length === 2);
+    assert(result[1][1].length === 2);
+    assert(result[1][2].length === 2);
+
+    result = dot.remove(values, '*.*.3');
+    assert.deepStrictEqual(result, [
+      [
+        [1, 2, 3],
+        [1, 2, 3],
+        [1, 2, 3],
+      ],
+      [
+        [1, 2, 3],
+        [1, 2, 3],
+        [1, 2, 3],
+      ],
+    ]);
   });
 
 
