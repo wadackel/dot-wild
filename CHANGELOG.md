@@ -1,3 +1,8 @@
+## v2.2.4 (2017-07-02)
+
+* Switch to `clone` from `clone-deep`
+
+
 ## v2.2.3 (2017-07-02)
 
 * Fix bug that missing date instance when clone
