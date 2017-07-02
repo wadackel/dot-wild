@@ -1,3 +1,8 @@
+## v2.2.3 (2017-07-02)
+
+* Fix bug that missing date instance when clone
+
+
 ## v2.2.2 (2017-06-09)
 
 * Bug fix in `v2.2.1`...
