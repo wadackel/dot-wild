@@ -6,10 +6,11 @@
   "typings": "lib/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "watch": "npm run build -- -w & npm run test:unit -- -w",
+    "watch": "npm run build -- -w & npm run test:watch",
     "test": "npm run test:lint && npm run test:unit",
     "test:lint": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'",
     "test:unit": "mocha --compilers ts:ts-node/register,tsx:ts-node/register 'test/**/*.spec.ts'",
+    "test:watch": "npm run test:unit -- -w",
     "docs": "typedoc --excludeNotExported --excludePrivate --out docs/ src/ && touch docs/.nojekyll",
     "prepublish": "npm run build"
   },
