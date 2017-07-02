@@ -222,10 +222,45 @@ describe('dot-wild', () => {
       { profile: { name: 'test', age: 50 } },
     ]);
     assertT2();
+
+    const date1 = new Date();
+    const date2 = new Date();
+    const values = {
+      foo: date1,
+      bar: {
+        baz: date2,
+      },
+    };
+    const assertDate = () => {
+      assert.deepStrictEqual(values, {
+        foo: date1,
+        bar: {
+          baz: date2,
+        },
+      });
+    };
+
+    assert.deepStrictEqual(dot.set(values, 'hoge', date1), {
+      foo: date1,
+      bar: {
+        baz: date2,
+      },
+      hoge: date1,
+    });
+    assertDate();
+
+    assert.deepStrictEqual(dot.set(values, 'hoge', date1), {
+      foo: date1,
+      bar: {
+        baz: date2,
+      },
+      hoge: date1,
+    });
+    assertDate();
   });
 
 
-  it.only('remove()', () => {
+  it('remove()', () => {
     const t1 = { foo: { bar: 'baz' } };
     const assertT1 = () => {
       assert.deepStrictEqual(t1, { foo: { bar: 'baz' } });
