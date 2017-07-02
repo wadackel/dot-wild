@@ -7,8 +7,8 @@ type Tokens = Token[];
 /**
  * Utilities
  */
+const clone = require('clone');
 const isObj = require('is-plain-object');
-const clone = require('clone-deep');
 const isArray = (val: any): val is any[] => Array.isArray(val);
 const isString = (val: any): val is string => typeof val === 'string';
 const isInteger = (val: any): boolean => Number(val) == val && Number(val) % 1 === 0; // tslint:disable-line triple-equals
