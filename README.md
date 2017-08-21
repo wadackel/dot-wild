@@ -233,14 +233,14 @@ See [API Documetation](https://tsuyoshiwada.github.io/dot-wild/).
 
 All methods return a new object or array. (immutable)
 
-* `get(data, path, [value]): Object | any[]`
+* `get(data, path, [options]): Object | any[]`
 * `set(data, path, value): Object | any[]`
 * `remove(data, path): Object | any[]`
 * `has(data, path): boolean`
 * `flatten(data): Object`
 * `expand(data): Object | any[]`
-* `forEach(data, path, iteratee): void`
-* `map(data, path, iteratee): any[]`
+* `forEach(data, path, iteratee, options): void`
+* `map(data, path, iteratee, options): any[]`
 * `tokenize(path): string[]`
 * `matchPath(pathA, pathB): boolean`
 * `escapePath(path): string`
@@ -277,6 +277,18 @@ Value to set at path or optional default value to return from get.
 **type: `(string | number)[]`**
 
 An array of tokens that make up the path.
+
+
+#### options
+
+This is an option for Getter method. (`get`, `forEach`. and `map`)
+
+```javascript
+{
+  iterateObject: true; // If it is `true`, it will enumerate the values of the object when using wildcards
+  iterateArray: true; // If it is `true`, it will enumerate the values of the array when using wildcards
+}
+```
 
 
 

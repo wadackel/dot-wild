@@ -113,13 +113,33 @@ export const tokenize = (str: string): Tokens => {
 /**
  * Getter
  */
+export interface DotGetOptions {
+  iterateObject?: boolean;
+  iterateArray?: boolean;
+}
+
+interface InternalDotGetOptions extends DotGetOptions {
+  iterateObject: boolean;
+  iterateArray: boolean;
+}
+
 interface DataWithKeys {
   exist: boolean;
   wildcard: boolean;
   values: [any, any, DotKeys][]; // [value, context, keys]
 }
 
-const internalGet = (data: any, path: DotKey, value: any | null): DataWithKeys => {
+const defaultGetOptions: InternalDotGetOptions = {
+  iterateObject: true,
+  iterateArray: true,
+};
+
+const internalGet = (data: any, path: DotKey, value: any | null, options?: DotGetOptions): DataWithKeys => {
+  const opts: InternalDotGetOptions = {
+    ...defaultGetOptions,
+    ...(options || {}),
+  };
+
   if (!path || !isString(path)) {
     return {
       exist: false,
@@ -148,11 +168,14 @@ const internalGet = (data: any, path: DotKey, value: any | null): DataWithKeys =
       each(item, (v, k) => {
         if (!matchToken(k, token)) return;
 
-        if (token === '*') {
+        if (token !== '*') {
+          next.push([v, item, [...p, k]]);
+        } else {
+          if (!opts.iterateObject && isObj(item)) return;
+          if (!opts.iterateArray && isArray(item)) return;
           state.wildcard = true;
+          next.push([v, item, [...p, k]]);
         }
-
-        next.push([v, item, [...p, k]]);
       });
     });
 
@@ -177,8 +200,8 @@ const internalGet = (data: any, path: DotKey, value: any | null): DataWithKeys =
   };
 };
 
-export const get = (data: any, path: DotKey, value: any | null = null): any => {
-  const { exist, wildcard, values } = internalGet(data, path, value);
+export const get = (data: any, path: DotKey, value: any | null = null, options?: DotGetOptions): any => {
+  const { exist, wildcard, values } = internalGet(data, path, value, options);
 
   if (!exist) return values[0][0];
   if (wildcard) return values.map(v => v[0]);
@@ -427,8 +450,13 @@ export const expand = (data: any): any => {
 /**
  * Executes a provided function once for each element.
  */
-export const forEach = (data: any, path: DotKey, iteratee: (value: any, key: DotKey, context: any, path: string, data: any | any[]) => boolean | void): void => {
-  const { exist, values } = internalGet(data, path, null);
+export const forEach = (
+  data: any,
+  path: DotKey,
+  iteratee: (value: any, key: DotKey, context: any, path: string, data: any | any[]) => boolean | void,
+  options?: DotGetOptions,
+): void => {
+  const { exist, values } = internalGet(data, path, null, options);
   if (!exist) return;
 
   each(values, ([v, c, p]) => iteratee(v, p[p.length - 1], c, p.join('.'), data));
@@ -439,8 +467,13 @@ export const forEach = (data: any, path: DotKey, iteratee: (value: any, key: Dot
  * Create a new element
  * with the results of calling a provided function on every element.
  */
-export const map = (data: any, path: DotKey, iteratee: (value: any, key: DotKey, context: any, path: string, data: any | any[]) => any): any[] => {
-  const { exist, values } = internalGet(data, path, null);
+export const map = (
+  data: any,
+  path: DotKey,
+  iteratee: (value: any, key: DotKey, context: any, path: string, data: any | any[]) => any,
+  options?: DotGetOptions,
+): any[] => {
+  const { exist, values } = internalGet(data, path, null, options);
   if (!exist) return [];
 
   return values.map(([v, c, p]) => iteratee(v, p[p.length - 1], c, p.join('.'), data));
