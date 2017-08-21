@@ -278,14 +278,14 @@ dot.containWildcardToken(<span class="hljs-string">'foo*bar'</span>);
 				<p>See <a href="https://tsuyoshiwada.github.io/dot-wild/">API Documetation</a>.</p>
 				<p>All methods return a new object or array. (immutable)</p>
 				<ul>
-					<li><code>get(data, path, [value]): Object | any[]</code></li>
+					<li><code>get(data, path, [options]): Object | any[]</code></li>
 					<li><code>set(data, path, value): Object | any[]</code></li>
 					<li><code>remove(data, path): Object | any[]</code></li>
 					<li><code>has(data, path): boolean</code></li>
 					<li><code>flatten(data): Object</code></li>
 					<li><code>expand(data): Object | any[]</code></li>
-					<li><code>forEach(data, path, iteratee): void</code></li>
-					<li><code>map(data, path, iteratee): any[]</code></li>
+					<li><code>forEach(data, path, iteratee, options): void</code></li>
+					<li><code>map(data, path, iteratee, options): any[]</code></li>
 					<li><code>tokenize(path): string[]</code></li>
 					<li><code>matchPath(pathA, pathB): boolean</code></li>
 					<li><code>escapePath(path): string</code></li>
@@ -305,6 +305,13 @@ dot.containWildcardToken(<span class="hljs-string">'foo*bar'</span>);
 				<h4 id="tokens">tokens</h4>
 				<p><strong>type: <code>(string | number)[]</code></strong></p>
 				<p>An array of tokens that make up the path.</p>
+				<h4 id="options">options</h4>
+				<p>This is an option for Getter method. (<code>get</code>, <code>forEach</code>. and <code>map</code>)</p>
+				<pre><code class="lang-javascript">{
+  <span class="hljs-attr">iterateObject</span>: <span class="hljs-literal">true</span>; <span class="hljs-comment">// If it is `true`, it will enumerate the values of the object when using wildcards</span>
+  iterateArray: <span class="hljs-literal">true</span>; <span class="hljs-comment">// If it is `true`, it will enumerate the values of the array when using wildcards</span>
+}
+</code></pre>
 				<h2 id="contribute">Contribute</h2>
 				<ol>
 					<li>Fork it!</li>
