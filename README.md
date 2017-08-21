@@ -233,7 +233,7 @@ See [API Documetation](https://tsuyoshiwada.github.io/dot-wild/).
 
 All methods return a new object or array. (immutable)
 
-* `get(data, path, [options]): Object | any[]`
+* `get(data, path, [value, options]): Object | any[]`
 * `set(data, path, value): Object | any[]`
 * `remove(data, path): Object | any[]`
 * `has(data, path): boolean`
