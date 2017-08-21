@@ -113,6 +113,72 @@ describe('dot-wild', () => {
   });
 
 
+  it('get() with options', () => {
+    const value = {
+      obj: {
+        kfoo: 'foo',
+        kbar: 'bar',
+        kbaz: 'baz',
+      },
+      arr: [
+        'foo',
+        'bar',
+        'baz',
+      ],
+    };
+
+    const obj = {
+      kfoo: 'foo',
+      kbar: 'bar',
+      kbaz: 'baz',
+    };
+
+    const arr = [
+      'foo',
+      'bar',
+      'baz',
+    ];
+
+    // obj
+    assert.deepStrictEqual(dot.get(value, 'obj.*'), [
+      'foo',
+      'bar',
+      'baz',
+    ]);
+
+    assert.deepStrictEqual(dot.get(value, 'obj.*', null, { iterateObject: false }), null);
+    assert.deepStrictEqual(dot.get(value, 'obj.*', 'default', { iterateObject: false }), 'default');
+
+    assert.deepStrictEqual(dot.get(obj, '*'), [
+      'foo',
+      'bar',
+      'baz',
+    ]);
+
+    assert.deepStrictEqual(dot.get(obj, '*', null, { iterateObject: false }), null);
+    assert.deepStrictEqual(dot.get(obj, '*', 'default', { iterateObject: false }), 'default');
+
+    // arr
+    assert.deepStrictEqual(dot.get(value, 'arr.*'), [
+      'foo',
+      'bar',
+      'baz',
+    ]);
+
+    assert.deepStrictEqual(dot.get(value, 'arr.*', null, { iterateArray: false }), null);
+    assert.deepStrictEqual(dot.get(value, 'arr.*', 'default', { iterateArray: false }), 'default');
+
+    assert.deepStrictEqual(dot.get(arr, '*'), [
+      'foo',
+      'bar',
+      'baz',
+    ]);
+
+    assert.deepStrictEqual(dot.get(arr, '*', null, { iterateArray: false }), null);
+    assert.deepStrictEqual(dot.get(arr, '*', 'default', { iterateArray: false }), 'default');
+  });
+
+
   it('set()', () => {
     const t1 = { foo: { bar: 'baz' } };
     const assertT1 = () => {
@@ -578,6 +644,60 @@ describe('dot-wild', () => {
   });
 
 
+  it('forEach() with options', () => {
+    const sampleData = {
+      obj: {
+        kfoo: 'foo',
+        kbar: 'bar',
+        kbaz: 'baz',
+      },
+      arr: [
+        'foo',
+        'bar',
+        'baz',
+      ],
+    };
+
+    let results: any[] = [];
+
+    dot.forEach(sampleData, 'obj.*', (value: any, key: any, _: any, path: string) => {
+      results.push([value, key, path]);
+    });
+
+    assert.deepStrictEqual(results, [
+      ['foo', 'kfoo', 'obj.kfoo'],
+      ['bar', 'kbar', 'obj.kbar'],
+      ['baz', 'kbaz', 'obj.kbaz'],
+    ]);
+
+    results = [];
+
+    dot.forEach(sampleData, 'obj.*', (value: any, key: any, _: any, path: string) => {
+      results.push([value, key, path]);
+    }, { iterateObject: false });
+
+    assert.deepStrictEqual(results, []);
+
+    dot.forEach(sampleData, 'arr.*', (value: any, key: any, _: any, path: string) => {
+      results.push([value, key, path]);
+    });
+
+    assert.deepStrictEqual(results, [
+      ['foo', 0, 'arr.0'],
+      ['bar', 1, 'arr.1'],
+      ['baz', 2, 'arr.2'],
+    ]);
+
+    results = [];
+
+    dot.forEach(sampleData, 'arr.*', (value: any, key: any, _: any, path: string) => {
+      results.push([value, key, path]);
+    }, { iterateArray: false });
+
+    assert.deepStrictEqual(results, []);
+  });
+
+
   it('map()', () => {
     let results: any[] = [];
 
@@ -630,6 +750,48 @@ describe('dot-wild', () => {
     assert(results[5][0] === 40);
     assert(results[5][1] === 'age');
     assert(results[5][2] === 'nested.deep.1.members.2.profile.age');
+  });
+
+
+  it('map() with options', () => {
+    const sampleData = {
+      obj: {
+        kfoo: 'foo',
+        kbar: 'bar',
+        kbaz: 'baz',
+      },
+      arr: [
+        'foo',
+        'bar',
+        'baz',
+      ],
+    };
+
+    let results: any[] = [];
+
+    results = dot.map(sampleData, 'obj.*', (value: any, key: any, _: any, path: string) => [value, key, path]);
+
+    assert.deepStrictEqual(results, [
+      ['foo', 'kfoo', 'obj.kfoo'],
+      ['bar', 'kbar', 'obj.kbar'],
+      ['baz', 'kbaz', 'obj.kbaz'],
+    ]);
+
+    results = dot.map(sampleData, 'obj.*', (value: any, key: any, _: any, path: string) => [value, key, path], { iterateObject: false });
+
+    assert.deepStrictEqual(results, []);
+
+    results = dot.map(sampleData, 'arr.*', (value: any, key: any, _: any, path: string) => [value, key, path]);
+
+    assert.deepStrictEqual(results, [
+      ['foo', 0, 'arr.0'],
+      ['bar', 1, 'arr.1'],
+      ['baz', 2, 'arr.2'],
+    ]);
+
+    results = dot.map(sampleData, 'arr.*', (value: any, key: any, _: any, path: string) => [value, key, path], { iterateArray: false });
+
+    assert.deepStrictEqual(results, []);
   });
 
 
