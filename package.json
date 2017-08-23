@@ -1,6 +1,6 @@
 {
   "name": "dot-wild",
-  "version": "2.2.5-alpha.1",
+  "version": "2.2.5",
   "description": "Use powerful dot notation (dot path + wildcard) to manipulate properties of JSON",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
