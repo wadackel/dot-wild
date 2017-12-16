@@ -7,6 +7,7 @@
 
 
 
+
 ## Table of Contents
 
 - [Install](#install)
@@ -19,6 +20,7 @@
 
 
 
+
 ## Install
 
 ```bash
@@ -28,6 +30,7 @@ $ npm install dot-wild --save
 
 $ yarn add dot-wild
 ```
+
 
 
 
@@ -227,6 +230,8 @@ dot.containWildcardToken('foo*bar');
 ```
 
 
+
+
 ## API
 
 See [API Documetation](https://tsuyoshiwada.github.io/dot-wild/).
@@ -302,6 +307,14 @@ This is an option for Getter method. (`get`, `forEach`. and `map`)
 1. Submit a pull request :D
 
 Bugs, feature requests and comments are more than welcome in the [issues](https://github.com/tsuyoshiwada/dot-wild/issues).
+
+
+
+
+## Related projects
+
+* [dot-wild-tiny](https://github.com/tsuyoshiwada/dot-wild-tiny)
+
 
 
 
