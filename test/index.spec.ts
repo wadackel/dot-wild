@@ -179,6 +179,45 @@ describe('dot-wild', () => {
   });
 
 
+  it('get() with undefined and null value', () => {
+    const obj = {
+      a: {
+        b: undefined,
+        c: null,
+      },
+      d: [
+        'e',
+        undefined,
+        null,
+      ],
+    };
+
+    assert(dot.get(obj, 'a.b') === undefined);
+    assert(dot.get(obj, 'a.c') === null);
+    assert(dot.get(obj, 'a.c.z') === undefined);
+    assert(dot.get(obj, 'd[0]') === 'e');
+    assert(dot.get(obj, 'd[1]') === undefined);
+    assert(dot.get(obj, 'd[2]') === null);
+    assert(dot.get(obj, 'd[3]') === undefined);
+
+    assert(dot.get(obj, 'a.b', undefined) === undefined);
+    assert(dot.get(obj, 'a.c', undefined) === null);
+    assert(dot.get(obj, 'a.c.z', undefined) === undefined);
+    assert(dot.get(obj, 'd[0]', undefined) === 'e');
+    assert(dot.get(obj, 'd[1]', undefined) === undefined);
+    assert(dot.get(obj, 'd[2]', undefined) === null);
+    assert(dot.get(obj, 'd[3]', undefined) === undefined);
+
+    assert(dot.get(obj, 'a.b', 'default') === 'default');
+    assert(dot.get(obj, 'a.c', 'default') === null);
+    assert(dot.get(obj, 'a.c.z', 'default') === 'default');
+    assert(dot.get(obj, 'd[0]', 'default') === 'e');
+    assert(dot.get(obj, 'd[1]', 'default') === 'default');
+    assert(dot.get(obj, 'd[2]', 'default') === null);
+    assert(dot.get(obj, 'd[3]', 'default') === 'default');
+  });
+
+
   it('set()', () => {
     const t1 = { foo: { bar: 'baz' } };
     const assertT1 = () => {

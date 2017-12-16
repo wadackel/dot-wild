@@ -134,7 +134,7 @@ const defaultGetOptions: InternalDotGetOptions = {
   iterateArray: true,
 };
 
-const internalGet = (data: any, path: DotKey, value: any | null, options?: DotGetOptions): DataWithKeys => {
+const internalGet = (data: any, path: DotKey, value: any | undefined, options?: DotGetOptions): DataWithKeys => {
   const opts: InternalDotGetOptions = {
     ...defaultGetOptions,
     ...(options || {}),
@@ -200,12 +200,12 @@ const internalGet = (data: any, path: DotKey, value: any | null, options?: DotGe
   };
 };
 
-export const get = (data: any, path: DotKey, value: any | null = null, options?: DotGetOptions): any => {
+export const get = (data: any, path: DotKey, value: any | undefined = undefined, options?: DotGetOptions): any => {
   const { exist, wildcard, values } = internalGet(data, path, value, options);
 
   if (!exist) return values[0][0];
   if (wildcard) return values.map(v => v[0]);
-  return values[0][0];
+  return values[0][0] === undefined ? value : values[0][0];
 };
 
 
