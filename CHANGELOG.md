@@ -1,42 +1,68 @@
-## v2.2.4 (2017-08-23)
+## v3.0.0
+
+> 2017-12-16
+
+### Breaking changes
+
+* Change default value to `undefined`. Related [#10](https://github.com/tsuyoshiwada/dot-wild/issues/10) and [#11](https://github.com/tsuyoshiwada/dot-wild/issues/11).
+    - Thanks for [@VladShcherbin](https://github.com/VladShcherbin).
+
+
+## v2.2.4
+
+> 2017-08-23
 
 * Add getter options [#8](https://github.com/tsuyoshiwada/dot-wild/issues/8). Thanks for [@VladShcherbin](https://github.com/VladShcherbin).
 
 
-## v2.2.4 (2017-07-02)
+## v2.2.4
+
+> 2017-07-02
 
 * Switch to `clone` from `clone-deep`
 
 
-## v2.2.3 (2017-07-02)
+## v2.2.3
+
+> 2017-07-02
 
 * Fix bug that missing date instance when clone
 
 
-## v2.2.2 (2017-06-09)
+## v2.2.2
+
+> 2017-06-09
 
 * Bug fix in `v2.2.1`...
 
 
-## v2.2.1 (2017-06-09)
+## v2.2.1
+
+> 2017-06-09
 
 * Fix a bug that remove() method left empty element of array
 
 
-## v2.2.0 (2017-05-23)
+## v2.2.0
+
+> 2017-05-23
 
 * Add helper methods
     - `buildPath()`
 
 
-## v2.1.0 (2017-05-18)
+## v2.1.0
+
+> 2017-05-18
 
 * Add helper methods
     - `tokenize()`
     - `containWildcardToken()`
 
 
-## v2.0.0 (2017-04-25)
+## v2.0.0
+
+> 2017-04-25
 
 ### Breaking changes
 
@@ -44,14 +70,18 @@
   => `(value: any, key: DotKey, context: any, path: string, data: any | any[])`
 
 
-## v1.1.1 (2017-04-14)
+## v1.1.1
+
+> 2017-04-14
 
 ### Minor changes
 
 * Change collection helper callback arguments [#2](https://github.com/tsuyoshiwada/dot-wild/issues/2)
 
 
-## v1.1.0 (2017-04-10)
+## v1.1.0
+
+> 2017-04-10
 
 ### New features
 
@@ -65,7 +95,9 @@
 * Clean unnecessary export
 
 
-## v1.0.0 (2017-04-04)
+## v1.0.0
+
+> 2017-04-04
 
 ### New features
 
@@ -80,7 +112,9 @@
 * jsdoc comment.
 
 
-## v0.2.0 (2017-01-24)
+## v0.2.0
+
+> 2017-01-24
 
 ### New features
 
@@ -95,16 +129,18 @@
 * jsdoc comment.
 
 
+## v0.1.0
 
-## v0.1.0 (2017-01-24)
+> 2017-01-24
 
 ### New features
 
 * Add `matchPath` method.
 
 
+## v0.0.1
 
-## v0.0.1 (2017-01-23)
+> 2017-01-23
 
 * :tada: First release.
 
