@@ -56,7 +56,7 @@
     "typescript": "^2.4.1"
   },
   "dependencies": {
-    "clone": "^2.1.1",
+    "clone-deep": "^2.0.1",
     "is-plain-object": "^2.0.3"
   },
   "files": [
