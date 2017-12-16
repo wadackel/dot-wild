@@ -1,3 +1,10 @@
+## v3.0.1
+
+> 2017-12-16
+
+* Change to [clone-deep](https://www.npmjs.com/package/clone-deep) from [clone](https://www.npmjs.com/package/clone). [#12](https://github.com/tsuyoshiwada/dot-wild/issues/12)
+
+
 ## v3.0.0
 
 > 2017-12-16
