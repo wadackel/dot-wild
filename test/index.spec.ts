@@ -41,7 +41,10 @@ describe('dot-wild', () => {
     assert.deepStrictEqual(dot.tokenize('foo**bar'), ['foo**bar']);
     assert.deepStrictEqual(dot.tokenize('hoge.1.fuga'), ['hoge', '1', 'fuga']);
     assert.deepStrictEqual(dot.tokenize('hoge[1].fuga'), ['hoge', '1', 'fuga']);
-    assert.deepStrictEqual(dot.tokenize('hoge[1].*.fuga'), ['hoge', '1', '*', 'fuga']);
+    assert.deepStrictEqual(dot.tokenize('__proto__.polluted'), ['polluted']);
+    assert.deepStrictEqual(dot.tokenize('prototype.polluted'), ['polluted']);
+    assert.deepStrictEqual(dot.tokenize('constructor.polluted'), ['polluted']);
+    assert.deepStrictEqual(dot.tokenize('[\'__proto__\'].polluted'), ['polluted']);
   });
 
 
