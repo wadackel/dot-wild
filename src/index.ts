@@ -15,6 +15,7 @@ const isInteger = (val: any): boolean => Number(val) == val && Number(val) % 1 =
 const isNumeric = (val: any): boolean => !isArray(val) && (val - parseFloat(val) + 1) >= 0;
 const isData = (data: any): boolean => isObj(data) || isArray(data);
 const isArrayKey = (key: DotKey): boolean => isInteger(key) && parseInt(<string>key) >= 0;
+const isValidKey  = (key: DotKey): boolean => key !== '__proto__' && key !== 'constructor' && key !== 'prototype';
 const hasProp = (obj: any, key: DotKey) => obj && obj.hasOwnProperty(key);
 const objKeys = Object.keys;
 
@@ -102,7 +103,8 @@ export const tokenize = (str: string): Tokens => {
 
   splitTokens(str).forEach(token => {
     token.replace(regex.prop, (m: any, n: number, q: string, s: string): any => {
-      results.push(q ? s.replace(regex.escape, '$1') : (n || m));
+      const t = q ? s.replace(regex.escape, '$1') : (n || m);
+      if (isValidKey(t)) results.push(t);
     });
   });
 
