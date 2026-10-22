@@ -269,6 +269,8 @@ Separator in path syntax can be escaped by using the `\\.`.
 
 And, you can match arrays by using `*` (wildcard).
 
+`set`, `remove` and `expand` throw a `TypeError` when a path contains `__proto__`, `constructor` or `prototype` as a token, to prevent prototype pollution. Keys with these names in plain objects of the data are dropped when `set` and `remove` copy it, and from the result of `flatten`. When `set` merges a value through a trailing wildcard, keys with these names at the top level of the value are not merged.
+
 
 #### value
 

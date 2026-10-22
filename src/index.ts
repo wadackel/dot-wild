@@ -17,6 +17,7 @@ const isData = (data: any): boolean => isObj(data) || isArray(data);
 const isArrayKey = (key: DotKey): boolean => isInteger(key) && parseInt(<string>key) >= 0;
 const hasProp = (obj: any, key: DotKey) => obj && obj.hasOwnProperty(key);
 const objKeys = Object.keys;
+const forbiddenTokens: Tokens = ['__proto__', 'constructor', 'prototype'];
 
 
 const isEmpty = (obj: any): boolean => {
@@ -52,6 +53,8 @@ const each = (obj: any | null, iteratee: (v: any, i: DotKey, a: any) => boolean 
 
 const merge = <T>(obj: T, source: T): T => {
   each(source, (value, key) => {
+    if (forbiddenTokens.indexOf(<string>key) > -1) return;
+
     if (hasProp(obj, key) && isData(obj)) {
       merge(obj[key], value);
     } else {
@@ -59,6 +62,20 @@ const merge = <T>(obj: T, source: T): T => {
     }
   });
   return obj;
+};
+
+
+// clone-deep copies own keys with `this[key] = ...`, which turns an own `__proto__`
+// key (e.g. from JSON.parse) into the prototype of the copy.
+const cloneData = (data: any): any => {
+  if (!isData(data)) return clone(data);
+
+  const result: any = isArray(data) ? [] : {};
+  each(data, (value, key) => {
+    if (forbiddenTokens.indexOf(<string>key) > -1) return;
+    result[key] = cloneData(value);
+  });
+  return result;
 };
 
 
@@ -107,6 +124,15 @@ export const tokenize = (str: string): Tokens => {
   });
 
   return results;
+};
+
+
+const assertSafePath = (path: string): void => {
+  tokenize(path).forEach(token => {
+    if (forbiddenTokens.indexOf(token) > -1) {
+      throw new TypeError(`Forbidden path token "${token}" in "${path}"`);
+    }
+  });
 };
 
 
@@ -215,7 +241,9 @@ export const get = (data: any, path: DotKey, value: any | undefined = undefined,
 export const set = (data: any, path: DotKey, value: any): any => {
   if (!path || !isString(path)) return data;
 
-  let _data = clone(data);
+  assertSafePath(path);
+
+  let _data = cloneData(data);
 
   if (!hasToken(path)) {
     _data[path] = value;
@@ -284,7 +312,9 @@ export const remove = (data: any, path: DotKey): any => {
     return data;
   }
 
-  let _data = clone(data);
+  assertSafePath(path);
+
+  let _data = cloneData(data);
 
   if (!hasToken(path) && path !== '*') {
     return simpleRemove(_data, path);
@@ -397,6 +427,8 @@ const internalFlatten = (data: any, currentPath: DotKey | null = null): any => {
   }
 
   each(data, (val, key) => {
+    if (forbiddenTokens.indexOf(<string>key) > -1) return;
+
     const k = `${key}`.split('.').join('\\.');
     const p = currentPath == null ? k : `${currentPath}.${k}`;
 
@@ -424,6 +456,8 @@ export const expand = (data: any): any => {
   let results = {};
 
   each(data, (value, flat) => {
+    assertSafePath(<string>flat);
+
     const keys = tokenize(<string>flat).reverse();
     const key = <string>keys.shift();
     let child = isArrayKey(key) ? [] : {};
