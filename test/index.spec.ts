@@ -28,6 +28,21 @@ const sampleData = {
 };
 
 
+// Restores Object.prototype in finally so a failing case cannot break mocha or later tests.
+const assertRejectsPollution = (fn: () => any) => {
+  const toString = Object.prototype.toString;
+
+  try {
+    assert.throws(fn, (e: any) => e instanceof TypeError && /Forbidden path token/.test(e.message));
+    assert(({} as any).polluted === undefined);
+    assert(typeof Object.prototype.toString === 'function');
+  } finally {
+    Object.prototype.toString = toString;
+    delete (Object.prototype as any).polluted;
+  }
+};
+
+
 describe('dot-wild', () => {
   it('tokenize()', () => {
     assert.deepStrictEqual(dot.tokenize(''), []);
@@ -365,6 +380,55 @@ describe('dot-wild', () => {
   });
 
 
+  it('set() rejects prototype pollution paths', () => {
+    assertRejectsPollution(() => dot.set({}, '__proto__.polluted', 1));
+    assertRejectsPollution(() => dot.set({}, '__proto__', { polluted: 1 }));
+    assertRejectsPollution(() => dot.set({}, 'constructor.prototype.polluted', 1));
+    assertRejectsPollution(() => dot.set({}, 'constructor', 1));
+    assertRejectsPollution(() => dot.set({}, 'prototype', 1));
+    assertRejectsPollution(() => dot.set({}, 'a["__proto__"].polluted', 1));
+    assertRejectsPollution(() => dot.set({ a: {} }, '*.__proto__.polluted', 1));
+    assertRejectsPollution(() => dot.set({ x: {} }, '*.a\\.b\\.__proto__.polluted', 1));
+  });
+
+
+  it('set() with a trailing wildcard ignores forbidden keys in the value', () => {
+    const value = JSON.parse('{"__proto__":{"polluted":1},"prototype":1,"ok":1}');
+    const result = dot.set({ a: {} }, '[*]', value);
+
+    assert(result.a.polluted === undefined);
+    assert(Object.getPrototypeOf(result.a) === Object.prototype);
+    assert(!result.a.hasOwnProperty('prototype'));
+    assert(result.a.ok === 1);
+    assert(({} as any).polluted === undefined);
+
+    const withConstructor = dot.set({ a: {} }, '[*]', { constructor: Object, ok: 1 });
+    assert(!withConstructor.a.hasOwnProperty('constructor'));
+    assert(withConstructor.a.ok === 1);
+  });
+
+
+  it('set() and remove() drop forbidden keys of the data when copying it', () => {
+    const parsed = JSON.parse('{"__proto__":{"isAdmin":true},"name":"foo"}');
+    const setResult = dot.set(parsed, 'updatedAt', 1);
+    assert(setResult.isAdmin === undefined);
+    assert(Object.getPrototypeOf(setResult) === Object.prototype);
+    assert.deepStrictEqual(setResult, { name: 'foo', updatedAt: 1 });
+
+    assert.deepStrictEqual(dot.set({ prototype: 1, constructor: Object, ok: 1 }, 'x', 1), { ok: 1, x: 1 });
+
+    const nested = JSON.parse('{"u":{"__proto__":{"isAdmin":true}},"x":1}');
+    const removeResult = dot.remove(nested, 'x');
+    assert(removeResult.u.isAdmin === undefined);
+    assert(Object.getPrototypeOf(removeResult.u) === Object.prototype);
+
+    const merged = dot.set({ a: {} }, '[*]', JSON.parse('{"x":{"__proto__":{"isAdmin":true}}}'));
+    const copied = dot.set(merged, 'y', 1);
+    assert(copied.a.x.isAdmin === undefined);
+    assert(Object.getPrototypeOf(copied.a.x) === Object.prototype);
+  });
+
+
   it('remove()', () => {
     const t1 = { foo: { bar: 'baz' } };
     const assertT1 = () => {
@@ -548,6 +612,14 @@ describe('dot-wild', () => {
   });
 
 
+  it('remove() rejects prototype pollution paths', () => {
+    assertRejectsPollution(() => dot.remove({}, '__proto__.toString'));
+    assertRejectsPollution(() => dot.remove({ a: {} }, '*.__proto__.toString'));
+    assertRejectsPollution(() => dot.remove({ x: { a: {} } }, '*.a\\.__proto__.toString'));
+    assertRejectsPollution(() => dot.remove({ constructor: 1 }, 'constructor'));
+  });
+
+
   it('has()', () => {
     assert(dot.has({ foo: { bar: 'baz' } }, 'foo') === true);
     assert(dot.has({ foo: { bar: 'baz' } }, 'foo.bar') === true);
@@ -606,6 +678,25 @@ describe('dot-wild', () => {
       'nested.deep.1.members.2.username': 'hogefuga',
       'nested.deep.1.members.2.profile.age': 40,
     });
+  });
+
+
+  it('flatten() drops forbidden keys of the data', () => {
+    const flat = dot.flatten(JSON.parse('{"__proto__":{"constructor":0,"isAdmin":true},"a":1}'));
+    assert(flat.isAdmin === undefined);
+    assert(Object.getPrototypeOf(flat) === Object.prototype);
+    assert.deepStrictEqual(flat, { a: 1 });
+
+    assert.deepStrictEqual(dot.flatten({ a: { prototype: 1, b: 2 } }), { 'a.b': 2 });
+  });
+
+
+  it('expand() rejects prototype pollution keys', () => {
+    assertRejectsPollution(() => dot.expand({ 'a.__proto__.polluted': 1 }));
+    assertRejectsPollution(() => dot.expand({ '__proto__.polluted': 1 }));
+    assertRejectsPollution(() => dot.expand({ '0.__proto__.polluted': 1 }));
+    assertRejectsPollution(() => dot.expand({ 'a["__proto__"].polluted': 1 }));
+    assertRejectsPollution(() => dot.expand({ 'a.constructor': 1 }));
   });
 
 

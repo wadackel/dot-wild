@@ -1,6 +1,6 @@
 {
   "name": "dot-wild",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Use powerful dot notation (dot path + wildcard) to manipulate properties of JSON",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -12,7 +12,7 @@
     "test:unit": "mocha --compilers ts:ts-node/register,tsx:ts-node/register 'test/**/*.spec.ts'",
     "test:watch": "npm run test:unit -- -w",
     "docs": "typedoc --excludeNotExported --excludePrivate --out docs/ src/ && touch docs/.nojekyll",
-    "prepublish": "npm run build"
+    "prepublishOnly": "npm run build"
   },
   "engines": {
     "node": ">=4.0.0"
